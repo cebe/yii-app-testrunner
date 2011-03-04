@@ -1,5 +1,7 @@
 <?php
 
+defined('DS') OR define('DS', DIRECTORY_SEPARATOR);
+
 // uncomment the following to define a path alias
 // Yii::setPathOfAlias('local','path/to/local-folder');
 
