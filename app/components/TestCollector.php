@@ -38,6 +38,4 @@ class TestCollector
 
 		return new TestCollection();
 	}
-
-
 }

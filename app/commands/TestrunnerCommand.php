@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @author Carsten Brandt <mail@cebe.cc>
+ */
 class TestrunnerCommand extends CConsoleCommand
 {
 	function actionHelp() {

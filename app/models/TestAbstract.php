@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @author Carsten Brandt <mail@cebe.cc>
+ */
 abstract class TestAbstract
 {
 	protected $unitTest = null;
