@@ -2,6 +2,7 @@
 
 /**
  * @author Carsten Brandt <mail@cebe.cc>
+ * @package Tests
  */
 abstract class TestAbstract extends CComponent
 {

@@ -2,6 +2,7 @@
 
 /**
  * @author Carsten Brandt <mail@cebe.cc>
+ * @package TestCollector
  */
 class TestCollector extends CComponent
 {

@@ -4,6 +4,7 @@
  * The Scope for all existing Tests
  *
  * @author Carsten Brandt <mail@cebe.cc>
+ * @package Scopes
  */
 class ScopeAll extends ScopeAbstract
 {

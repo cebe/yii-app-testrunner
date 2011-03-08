@@ -6,6 +6,7 @@
  * @todo better description
  *
  * @author Carsten Brandt <mail@cebe.cc>
+ * @package TestCollector
  */
 abstract class TestCollectionAbstract extends CComponent implements Iterator
 {

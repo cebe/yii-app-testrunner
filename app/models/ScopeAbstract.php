@@ -4,6 +4,7 @@
  * @todo
  *
  * @author Carsten Brandt <mail@cebe.cc>
+ * @package Scopes
  */
 abstract class ScopeAbstract extends CComponent
 {

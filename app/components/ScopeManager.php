@@ -6,6 +6,7 @@
  * It lists available scopes, creates scope classes etc...
  *
  * @author Carsten Brandt <mail@cebe.cc>
+ * @package Scopes
  */
 class ScopeManager extends CComponent
 {
