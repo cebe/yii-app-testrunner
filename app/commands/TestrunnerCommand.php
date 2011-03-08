@@ -120,11 +120,16 @@ EOF;
 
 		$collection = Yii::app()->testCollector->collectTests();
 
-		$this->p(" - found " . count($collection) /*->getCount()*/ . " tests\n", 1);
+		$this->p(" - " . count($collection) . " tests found\n", 1);
 
-		$this->p("filtering tests... \n\n");
+		$this->p("filtering tests... ");
 
 		$collection->applyScope($scope);
+		$this->p(" - " . ($count = count($collection)) . " tests to run\n", 1);
+		if ($count < 1) {
+			$this->p("no tests to run -> exiting\n", 1);
+			exit(0);
+		}
 
 		$this->p("running tests...\n\n");
 
