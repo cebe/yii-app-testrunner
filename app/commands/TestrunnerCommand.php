@@ -30,11 +30,11 @@ HELP
 EOF;
 	}
 
-	function actionIndex()
+	public function actionIndex()
 	{
 		echo "running tests...";
 
-		$tests = TestCollector();
+		//$tests = TestCollector();
 
 
 
