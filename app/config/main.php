@@ -48,6 +48,12 @@ return array(
 			//'scopePath' => array('application.models.scopes'),
 		),
 
+		'testCollector' => array(
+			'class' => 'TestCollector',
+
+			'basePath' => dirname(__FILE__) . '/../tests',
+		),
+
 		// uncomment the following to use a MySQL database
 		/*
 		'db'=>array(

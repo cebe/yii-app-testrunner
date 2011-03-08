@@ -3,16 +3,39 @@
 /**
  * @author Carsten Brandt <mail@cebe.cc>
  */
-class TestCollector
+class TestCollector extends CComponent
 {
-	public $basePath = '';
+	/**
+	 * base Path for tests
+	 *
+	 * @var null|string
+	 */
+	private $_basePath = null;
 
-
-	public function __construct($basePath=null)
+	/**
+	 * sets the base path for tests
+	 *
+	 * @param  $path
+	 * @return void
+	 */
+	public function setBasePath($path)
 	{
-		if (is_null($basePath)) {
-			$this->basePath = dirname(Yii::app()->basePath) . DS . 'tests';
+		$this->_basePath = $path;
+	}
+
+	/**
+	 * gets the base path for tests
+	 *
+	 * default is application.tests
+	 *
+	 * @return string
+	 */
+	public function getBasePath()
+	{
+		if (is_null($this->_basePath)) {
+			$this->_basePath = dirname(Yii::app()->basePath) . DS . 'tests';
 		}
+		return $this->_basePath;
 	}
 
 	public function collectTests()
