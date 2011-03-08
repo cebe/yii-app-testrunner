@@ -47,16 +47,28 @@ class TestCollector extends CComponent
 	public function collectTests()
 	{
 		$basePath = $this->getBasePath() . '/';
+
+		$directories = glob($basePath . '*', GLOB_ONLYDIR);
 		$tests = glob($basePath . '*Test.php');
+
+		for($i=0; $i < count($directories); ++$i)
+		{
+			if (is_dir($directories[$i])) {
+				$subDirectories = glob($directories[$i] . '/*');
+				$directories = array_merge($directories, $subDirectories);
+				$tests = array_merge($tests, glob($directories[$i] . '/*Test.php'));
+			}
+		}
 
 		$collection = new TestCollection();
 		foreach($tests as $path)
 		{
-			$className = substr($path, strlen($basePath), -4);
-			require_once($path);
-			$testClass = new $className;
-			$collection->addTest(new TestBase($testClass->getName(), $testClass));
-
+			if (preg_match('/\/(.*Test)\.php$/i', $path, $matches)) {
+				$className = $matches[1];
+				require_once($path);
+				$testClass = new $className;
+				$collection->addTest(new TestBase($testClass->getName(), $testClass));
+			}
 		}
 
 		return $collection;
