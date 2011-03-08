@@ -31,12 +31,12 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
 	public function __call($name,$parameters)
 	{
 		// handle scope
-		if (Yii::app()->scopeHandler->isScopeAvailable($name))
+		if (TestYii::app()->scopeHandler->isScopeAvailable($name))
 		{
 			if (isset($parameters[0]) AND $parameters[0]) {
 				$obj = clone $this;
 			}
-			$obj->scope = Yii::app()->scopeHandler->getScope($name);
+			$obj->scope = TestYii::app()->scopeHandler->getScope($name);
 			return $this;
 		}
 
@@ -55,7 +55,7 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
 	public function applyScope($scope)
 	{
 		if (is_string($scope)) {
-			$scope = Yii::app()->scopeManager->getScope($scope);
+			$scope = TestYii::app()->scopeManager->getScope($scope);
 		}
 		if (!($scope instanceof ScopeAbstract)) {
 			throw new Exception('Scope class ' . get_class($scope) . ' does not extend ScopeAbstract.');
@@ -69,7 +69,7 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
 	public function __construct()
 	{
 		// set scope to all
-		$this->scope = Yii::app()->scopeManager->getScope('all');
+		$this->scope = TestYii::app()->scopeManager->getScope('all');
 
 		if (is_null($this->scope)) {
 			throw new Exception('ScopeAll is required by TestCollection but was not found.');

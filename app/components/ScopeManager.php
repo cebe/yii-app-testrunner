@@ -37,7 +37,7 @@ class ScopeManager extends CComponent
 		$list = array();
 		foreach ($this->scopePath as $alias)
 		{
-			$path = Yii::getPathOfAlias($alias) . '/Scope';
+			$path = TestYii::getPathOfAlias($alias) . '/Scope';
 			$scopes = glob($path . '*.php');
 			foreach($scopes as $scope)
 			{
@@ -49,11 +49,11 @@ class ScopeManager extends CComponent
 		// add description
 		foreach($list as $name => $alias)
 		{
-			Yii::import($alias . '.*');
+			TestYii::import($alias . '.*');
 			$list[$name] = $this->getScope($name)->description;
 		}
 
-		Yii::trace(print_r($list,1));
+		TestYii::trace(print_r($list,1));
 		return $list;
 	}
 
@@ -67,9 +67,9 @@ class ScopeManager extends CComponent
 		$className = 'Scope' . ucfirst($name);
 		foreach ($this->scopePath as $alias)
 		{
-			$path = Yii::getPathOfAlias($alias);
+			$path = TestYii::getPathOfAlias($alias);
 			if (file_exists($path . '/' . $className . '.php')) {
-				Yii::import($alias . '.*');
+				TestYii::import($alias . '.*');
 				return new $className;
 			}
 		}

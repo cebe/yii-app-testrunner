@@ -34,7 +34,7 @@ class TestCollector extends CComponent
 	public function getBasePath()
 	{
 		if (is_null($this->_basePath)) {
-			$this->_basePath = dirname(Yii::app()->basePath) . DS . 'tests';
+			$this->_basePath = dirname(TestYii::app()->basePath) . DS . 'tests';
 		}
 		return $this->_basePath;
 	}

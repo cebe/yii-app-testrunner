@@ -106,9 +106,9 @@ EOF;
 			if ($path{0} != '/') {
 				$path = $_SERVER['PWD'] . '/' . $path;
 			}
-			Yii::app()->testCollector->basePath = $path;
+			TestYii::app()->testCollector->basePath = $path;
 		}
-		$this->p(" - base Path is '" . Yii::app()->testCollector->basePath . "'\n", 2);
+		$this->p(" - base Path is '" . TestYii::app()->testCollector->basePath . "'\n", 2);
 
 		$this->handleIncludePath($includePath);
 
@@ -118,7 +118,7 @@ EOF;
 
 		$this->p("collecting tests...");
 
-		$collection = Yii::app()->testCollector->collectTests();
+		$collection = TestYii::app()->testCollector->collectTests();
 
 		$this->p(" - " . count($collection) . " tests found\n", 1);
 
@@ -147,7 +147,7 @@ EOF;
 	{
 		echo 'list of available scopes:' . "\n\n";
 
-		$list = Yii::app()->scopeManager->listScopes();
+		$list = TestYii::app()->scopeManager->listScopes();
 
 		$maxlen = 6;
 		foreach ($list as $name => $description) {
@@ -177,7 +177,7 @@ EOF;
 			}
 
 			if (set_include_path('.' . PATH_SEPARATOR . implode(PATH_SEPARATOR, array_merge($includePaths, $phpIncludePaths))) === false) {
-				throw new CException(Yii::t('yii','Unable to import "{alias}". Please check your server configuration to make sure you are allowed to change PHP include_path.',array('{alias}'=>$alias)));
+				throw new CException(TestYii::t('yii','Unable to import "{alias}". Please check your server configuration to make sure you are allowed to change PHP include_path.',array('{alias}'=>$alias)));
 			}
 
 			foreach($includePaths as $path) {
