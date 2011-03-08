@@ -65,6 +65,7 @@ HELP
 
 		--quiet         like --verbose=0
 
+/** standalone only **/
 		--includePath   comma seperated list of paths to add to include_path
 
 		--bootstrap     a php file to run before tests are collected
@@ -98,7 +99,7 @@ EOF;
 	 *
 	 * @return void
 	 */
-	public function actionRunTests($bootstrap='',$includePath='', $path=null, $scope='all', $verbose=1, $quiet=false)
+	public function actionRunTests($bootstrap='', $scope='all', $verbose=1, $quiet=false)
 	{
 		// handle verbosity first
 		if ($quiet) {
@@ -112,19 +113,7 @@ EOF;
 
 		$this->p("preparing...\n", 2);
 
-		// scope
 		$this->p(" - scope is '$scope'\n", 2);
-
-		// basePath
-		if (!is_null($path)) {
-			if ($path{0} != '/') {
-				$path = $_SERVER['PWD'] . '/' . $path;
-			}
-			Yii::app()->testCollector->basePath = $path;
-		}
-		$this->p(" - base Path is '" . Yii::app()->testCollector->basePath . "'\n", 2);
-
-		$this->handleIncludePath($includePath);
 
 		if (!empty($bootstrap)) {
 			include($bootstrap);
