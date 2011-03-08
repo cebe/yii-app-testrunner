@@ -19,7 +19,7 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
 	 *
 	 * @var string
 	 */
-	protected $scope = null;
+	protected $scope = 'all';
 
 	/**
 	 * You can set the scope by calling $object->scopename()
@@ -27,11 +27,11 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
 	 *
 	 * @param  $functionName
 	 * @return
-	 */
+	 * /
 	public function __call($name,$parameters)
 	{
 		// handle scope
-		if (Yii::app()->scopeHandler->scopeExists($name))
+		if (Yii::app()->scopeHandler->isScopeAvailable($name))
 		{
 			if (isset($parameters[0]) AND $parameters[0]) {
 				$obj = clone $this;
@@ -42,11 +42,38 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
 
 		return parent::__call($name, $parameters);
 	}
+	*/
 
+	public function addTest($test)
+	{
+		$this->tests[] = $test;
+	}
+
+	/**
+	 *
+	 */
+	public function applyScope($scope)
+	{
+		if (is_string($scope)) {
+			$scope = Yii::app()->scopeManager->getScope($scope);
+		}
+		if (!($scope instanceof ScopeAbstract)) {
+			throw new Exception('Scope class ' . get_class($scope) . ' does not extend ScopeAbstract.');
+		}
+		$this->scope = $scope;
+	}
+
+	/**
+	 *
+	 */
 	public function __construct()
 	{
 		// set scope to all
-		$this->scope = new ScopeAll();
+		$this->scope = Yii::app()->scopeManager->getScope('all');
+
+		if (is_null($this->scope)) {
+			throw new Exception('ScopeAll is required by TestCollection but was not found.');
+		}
 
 		// reset the iterator position
 	    $this->rewind();
@@ -88,11 +115,18 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
 
     public function next()
     {
-        ++$this->_position;
+	    ++$this->_position;
+	    // skip tests that do not match scope
+	    while(isset($this->tests[$this->_position]) AND
+		      !$this->scope->matches($this->tests[$this->_position]))
+	    {
+		    ++$this->_position;
+	    }
     }
 
     public function valid()
     {
-        return isset($this->tests[$this->_position]);
+        return (isset($this->tests[$this->_position]) AND
+		        $this->scope->matches($this->tests[$this->_position]));
     }
 }
