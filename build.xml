@@ -55,7 +55,8 @@
     <target name="phpmd">
      <exec executable="phpmd">
       <arg line=". xml codesize,unusedcode
-                 --reportfile ${basedir}/build/logs/pmd.xml" />
+                 --reportfile ${basedir}/build/logs/pmd.xml
+                 --exclude yii,extensions,vendors,sites,migrations,messages,guidelines" />
      </exec>
     </target>
 
