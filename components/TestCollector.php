@@ -14,6 +14,13 @@ class TestCollector extends CComponent
 	private $_basePath = null;
 
 	/**
+	 * the correcsponding command
+	 *
+	 * @var TestrunnerCommand
+	 */
+	public $command = null;
+
+	/**
 	 * sets the base path for tests
 	 *
 	 * @param  $path
@@ -44,6 +51,11 @@ class TestCollector extends CComponent
 		// nothing
 	}
 
+	public function __construct($command=null)
+	{
+		$this->command = $command;
+	}
+
 	public function collectTests()
 	{
 		$basePath = $this->getBasePath() . '/';
@@ -60,7 +72,7 @@ class TestCollector extends CComponent
 			}
 		}
 
-		$collection = new TestCollection();
+		$collection = new TestCollection($this->command->scopeManager);
 		foreach($tests as $path)
 		{
 			if (preg_match('/\/(.*Test)\.php$/i', $path, $matches)) {

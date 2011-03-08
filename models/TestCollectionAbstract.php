@@ -14,6 +14,8 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
 
 	protected $tests = array();
 
+	public $scopeManager = null;
+
 	/**
 	 * current scope for filtering which tests are run
 	 *
@@ -54,8 +56,8 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
 	 */
 	public function applyScope($scope)
 	{
-		if (is_string($scope)) {
-			$scope = Yii::app()->scopeManager->getScope($scope);
+		if (is_string($scope) AND !is_null($this->scopeManager)) {
+			$scope = $this->scopeManager->getScope($scope);
 		}
 		if (!($scope instanceof ScopeAbstract)) {
 			throw new Exception('Scope class ' . get_class($scope) . ' does not extend ScopeAbstract.');
@@ -66,10 +68,15 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
 	/**
 	 *
 	 */
-	public function __construct()
+	public function __construct($scopeManager)
 	{
+		$this->scopeManager = $scopeManager;
+		if (!($this->scopeManager instanceof ScopeManager)) {
+			throw new Exception('ScopeManager is required by TestCollection but was not set.');
+		}
+
 		// set scope to all
-		$this->scope = Yii::app()->scopeManager->getScope('all');
+		$this->scope = $this->scopeManager->getScope('all');
 
 		if (is_null($this->scope)) {
 			throw new Exception('ScopeAll is required by TestCollection but was not found.');

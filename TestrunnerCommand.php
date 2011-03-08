@@ -127,7 +127,7 @@ EOF;
 
 		$this->p("collecting tests...");
 
-		$testCollector = new TestCollector();
+		$testCollector = new TestCollector($this);
 		$testCollector->setBasePath(Yii::getPathOfAlias('application.tests'));
 		$collection = $testCollector->collectTests();
 
