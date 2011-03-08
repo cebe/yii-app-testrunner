@@ -41,6 +41,13 @@ return array(
 		'db'=>array(
 			'connectionString' => 'sqlite:'.dirname(__FILE__).'/../data/testdrive.db',
 		),
+
+		'scopeManager' => array(
+			'class' => 'ScopeManager',
+
+			//'scopePath' => array('application.models.scopes'),
+		),
+
 		// uncomment the following to use a MySQL database
 		/*
 		'db'=>array(

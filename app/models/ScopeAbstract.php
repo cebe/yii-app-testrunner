@@ -1,10 +1,14 @@
 <?php
 
 /**
+ * @todo
+ *
  * @author Carsten Brandt <mail@cebe.cc>
  */
-abstract class ScopeAbstract
+abstract class ScopeAbstract extends CComponent
 {
+	public $description = 'all available tests';
+
 	/**
 	 *
 	 *

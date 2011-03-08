@@ -18,6 +18,15 @@ HELP
 	coming soon ;-)
 
 
+
+	listScopes  list of available scopes
+
+
+
+
+	--scope     choose a scope to filter tests
+
+
 EOF;
 	}
 
@@ -33,5 +42,26 @@ EOF;
 
 	}
 
+	public function actionListScopes()
+	{
+		echo 'list of available scopes:' . "\n\n";
+
+		$list = Yii::app()->scopeManager->listScopes();
+
+		$maxlen = 6;
+		foreach ($list as $name => $description) {
+			if ($maxlen < strlen($name)) {
+				$maxlen = strlen($name) + 1;
+			}
+		}
+		echo '   name ' . str_repeat(' ', $maxlen - 5) . 'description' . "\n\n";
+
+		foreach ($list as $name => $description) {
+			echo ' - ' . $name . str_repeat(' ', $maxlen - strlen($name)) . $description . "\n";
+		}
+
+		echo "\n";
+		exit();
+	}
 
 }
