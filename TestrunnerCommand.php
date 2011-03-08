@@ -22,7 +22,7 @@ class TestrunnerCommand extends CConsoleCommand
 	 */
 	public $baseAlias = 'application.commands.testRunner';
 
-	protected $scopeManager = null;
+	public $scopeManager = null;
 
 
 	public function init()
