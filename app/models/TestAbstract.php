@@ -16,7 +16,7 @@ abstract class TestAbstract extends CComponent
 	 * @abstract
 	 * @return array
 	 */
-	abstract public function scopes();
+	//abstract public function scopes();
 
 
 	public function getName()
@@ -36,6 +36,6 @@ abstract class TestAbstract extends CComponent
 	 * @abstract
 	 * @return boolean
 	 */
-	abstract public function matchesScope();
+	//abstract public function matchesScope();
 
 }
