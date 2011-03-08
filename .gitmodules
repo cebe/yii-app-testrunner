@@ -1,3 +1,3 @@
-[submodule "app/vendors/phpunit"]
-	path = app/vendors/phpunit
+[submodule "vendors/phpunit"]
+	path = vendors/phpunit
 	url = https://github.com/sebastianbergmann/phpunit.git
