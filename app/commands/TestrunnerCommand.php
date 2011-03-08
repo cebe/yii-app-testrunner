@@ -51,6 +51,10 @@ HELP
 
 		--quiet         like --verbose=0
 
+		--includePath   comma seperated list of paths to add to include_path
+
+		--bootstrap     a php file to run before tests are collected
+
 
 EOF;
 	}
@@ -80,7 +84,7 @@ EOF;
 	 *
 	 * @return void
 	 */
-	public function actionRunTests($path=null, $scope='all', $verbose=1, $quiet=false)
+	public function actionRunTests($bootstrap='',$includePath='', $path=null, $scope='all', $verbose=1, $quiet=false)
 	{
 		// handle verbosity first
 		if ($quiet) {
@@ -106,7 +110,13 @@ EOF;
 		}
 		$this->p(" - base Path is '" . Yii::app()->testCollector->basePath . "'\n", 2);
 
-		$this->p("collecting tests...\n\n");
+		$this->handleIncludePath($includePath);
+
+		if (!empty($bootstrap)) {
+			include($bootstrap);
+		}
+
+		$this->p("collecting tests...");
 
 		$collection = Yii::app()->testCollector->collectTests();
 
@@ -149,6 +159,29 @@ EOF;
 		echo "\n";
 		exit();
 	}
+
+
+	protected function handleIncludePath($includePath)
+	{
+		if (!empty($includePath)) {
+			$includePaths = explode(',', $includePath);
+
+			$phpIncludePaths = array_unique(explode(PATH_SEPARATOR, get_include_path()));
+			if (($pos = array_search('.', $phpIncludePaths, true)) !== false) {
+				unset($phpIncludePaths[$pos]);
+			}
+
+			if (set_include_path('.' . PATH_SEPARATOR . implode(PATH_SEPARATOR, array_merge($includePaths, $phpIncludePaths))) === false) {
+				throw new CException(Yii::t('yii','Unable to import "{alias}". Please check your server configuration to make sure you are allowed to change PHP include_path.',array('{alias}'=>$alias)));
+			}
+
+			foreach($includePaths as $path) {
+				$this->p("added $path to include_path\n", 2);
+			}
+			$this->p("\nphp include_path is now " . get_include_path() . "\n\n", 3);
+		}
+	}
+
 
 	/**
 	 * print text based on verbosity
