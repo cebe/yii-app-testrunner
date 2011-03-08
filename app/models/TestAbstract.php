@@ -3,7 +3,7 @@
 /**
  * @author Carsten Brandt <mail@cebe.cc>
  */
-abstract class TestAbstract
+abstract class TestAbstract extends CComponent
 {
 	protected $unitTest = null;
 
