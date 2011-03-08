@@ -17,6 +17,20 @@ class TestrunnerCommand extends CConsoleCommand
 	public $verbose = 1;
 
 	/**
+	 *
+	 * @var string
+	 */
+	public $baseAlias = 'application.commands.testRunner';
+
+
+	public function init()
+	{
+		Yii::import($this->baseAlias . '.components.*');
+		Yii::import($this->baseAlias . '.models.*');
+		Yii::import($this->baseAlias . '.scopes.*');
+	}
+
+	/**
 	 * returns help string for command
 	 *
 	 * @return string
@@ -118,7 +132,9 @@ EOF;
 
 		$this->p("collecting tests...");
 
-		$collection = Yii::app()->testCollector->collectTests();
+		$testCollector = new TestCollector();
+		$testCollector->setBasePath(Yii::getPathOfAlias('application.tests'));
+		$collection = $testCollector->collectTests();
 
 		$this->p(" - " . count($collection) . " tests found\n", 1);
 
@@ -147,7 +163,8 @@ EOF;
 	{
 		echo 'list of available scopes:' . "\n\n";
 
-		$list = Yii::app()->scopeManager->listScopes();
+		$scopeManager = new ScopeManager();
+		$list = $scopeManager->listScopes();
 
 		$maxlen = 6;
 		foreach ($list as $name => $description) {
