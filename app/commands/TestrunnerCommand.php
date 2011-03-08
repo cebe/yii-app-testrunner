@@ -5,7 +5,8 @@
  */
 class TestrunnerCommand extends CConsoleCommand
 {
-	function actionHelp() {
+	public function actionHelp()
+	{
 		echo <<<EOF
 yii app testrunner by Carsten Brandt (c) 2011
 ---------------------------------------------

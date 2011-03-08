@@ -3,7 +3,7 @@
 defined('DS') OR define('DS', DIRECTORY_SEPARATOR);
 
 return CMap::mergeArray(
-	require(dirname(__FILE__).'/main.php'),
+	require(dirname(__FILE__) . '/main.php'),
 	array(
 		'components'=>array(
 			'fixture'=>array(

@@ -8,7 +8,7 @@ defined('DS') OR define('DS', DIRECTORY_SEPARATOR);
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
 return array(
-	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
+	'basePath'=>dirname(dirname(__FILE__)),
 	'name'=>'My Web Application',
 
 	// preloading 'log' component
@@ -39,7 +39,7 @@ return array(
 		),
 		*/
 		'db'=>array(
-			'connectionString' => 'sqlite:'.dirname(__FILE__).'/../data/testdrive.db',
+			'connectionString' => 'sqlite:' . dirname(__FILE__) . '/../data/testdrive.db',
 		),
 
 		'scopeManager' => array(
