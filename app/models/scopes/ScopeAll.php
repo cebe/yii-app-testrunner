@@ -8,6 +8,13 @@
 class ScopeAll extends ScopeAbstract
 {
 	/**
+	 * scopes description
+	 *
+	 * @var string
+	 */
+	public $description = 'all available tests';
+
+	/**
 	 * all tests match here
 	 *
 	 * @see ScopeAbstract::matches()

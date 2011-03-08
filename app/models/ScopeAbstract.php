@@ -7,7 +7,14 @@
  */
 abstract class ScopeAbstract extends CComponent
 {
-	public $description = 'all available tests';
+	/**
+	 * short description about the scopes criteria
+	 *
+	 * overwrite this in your concrete class
+	 *
+	 * @var string
+	 */
+	public $description = 'no description available';
 
 	/**
 	 *
