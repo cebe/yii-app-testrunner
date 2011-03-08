@@ -39,10 +39,27 @@ class TestCollector extends CComponent
 		return $this->_basePath;
 	}
 
+	public function init()
+	{
+		// nothing
+	}
+
 	public function collectTests()
 	{
+		$basePath = $this->getBasePath() . '/';
+		$tests = glob($basePath . '*Test.php');
 
-		return new TestCollection();
+		$collection = new TestCollection();
+		foreach($tests as $path)
+		{
+			$className = substr($path, strlen($basePath), -4);
+			require_once($path);
+			$testClass = new $className;
+			$collection->addTest(new TestBase($testClass->getName(), $testClass));
+
+		}
+
+		return $collection;
 	}
 
 	public function collectTestsByPath()
