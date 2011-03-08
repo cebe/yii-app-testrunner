@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<ruleset name="MetaBMS">
+
+    <!-- How to edit this file:
+       http://pear.php.net/manual/en/package.php.php-codesniffer.annotated-ruleset.php
+    -->
+
+    <description>coding standard of MetaDesign BMS</description>
+
+    <!-- Coding Guideline defined here: http://wiki.meta-ib.de/index.php/CodingGuideline -->
+
+
+<!-- * 1 General -->
+<!--          o 1.1 File names -->
+
+
+<!--          o 1.2 PHP Tags -->
+
+    <rule ref="Generic.PHP.DisallowShortOpenTag"/>
+    <rule ref="Zend.Files.ClosingTag"/>
+
+    <rule ref="Generic.PHP.NoSilencedErrors"/>
+
+<!--          o 1.3 Indentation and line formatting -->
+
+
+    <!-- Lines can be 120 chars long, show errors at 150 chars - ->
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="120"/>
+            <property name="absoluteLineLimit" value="150"/>
+        </properties>
+    </rule>-->
+
+    <!-- Use Unix newlines -->
+    <rule ref="Generic.Files.LineEndings">
+        <properties>
+            <property name="eolChar" value="\n"/>
+        </properties>
+    </rule>
+
+
+
+<!--          o 1.4 Naming -->
+
+    <rule ref="Generic.NamingConventions.ConstructorName"/><!-- do not allow PHP4 Constructor names -->
+    <!--rule ref="PEAR.NamingConventions.ValidClassName"/-->
+    <rule ref="Squiz.NamingConventions.ValidFunctionName"/>
+    <rule ref="Squiz.NamingConventions.ValidVariableName"/>
+
+
+
+<!--          o 1.5 Functions and Methods -->
+
+
+<!--          o 1.6 Variables -->
+
+
+<!--          o 1.7 Constants -->
+
+    <rule ref="Generic.NamingConventions.UpperCaseConstantName"/><!-- constants should allways be upper case -->
+    <rule ref="Generic.PHP.LowerCaseConstant"/><!-- true false null etc... must be lower case -->
+
+<!--          o 1.8 String Literals -->
+
+    <!--rule ref="Generic.Strings.UnnecessaryStringConcat"/--><!-- do not concat strings if it could be one single string -->
+
+<!--          o 1.9 Variable Substitution -->
+
+    <!-- todo: extend this sniff to allow SQL in "" -->
+<!--    <rule ref="Squiz.Strings.DoubleQuoteUsage"/><!- - avoid "value of $varName ..." -->
+
+<!--          o 1.10 String Concatenation -->
+
+    <!--rule ref="Guidelines.Strings.ConcatenationSpacing"/-->
+
+<!--          o 1.11 Numerically Indexed Arrays -->
+
+
+<!--          o 1.12 Associative Arrays -->
+<!-- * 2 Classes -->
+<!--          o 2.1 Class Declaration -->
+
+    <rule ref="PEAR.Classes.ClassDeclaration"/>
+
+<!--          o 2.2 Class Member Variables -->
+
+
+<!--          o 2.3 Function and Method Declaration -->
+
+    <rule ref="Generic.Functions.OpeningFunctionBraceBsdAllman"/>
+    <rule ref="PEAR.Functions.ValidDefaultValue"/>
+    <rule ref="PEAR.Functions.FunctionDeclaration"/>
+    <!--rule ref="PEAR.Commenting.FunctionComment"/-->
+
+
+<!--          o 2.4 Function and Method Usage -->
+
+    <rule ref="Generic.Functions.CallTimePassByReference"/>
+<!--    <rule ref="PEAR.Functions.FunctionCallSignature"/>-->
+<!--    <rule ref="Generic.Functions.FunctionCallArgumentSpacing"/>-->
+
+<!--    * 3 Control Statements -->
+
+
+<!--          o 3.1 If/Else/Elseif -->
+
+    <rule ref="Generic.ControlStructures.InlineControlStructure"/>
+
+<!--          o 3.2 Switch -->
+
+
+
+
+<!-- detect some bad code - ->
+
+    <rule ref="Generic.CodeAnalysis.EmptyStatementSniff"/>
+    <rule ref="Generic.CodeAnalysis.ForLoopShouldBeWhileLoop"/>
+    <rule ref="Generic.CodeAnalysis.ForLoopWithTestFunctionCall"/>
+    <rule ref="Generic.CodeAnalysis.JumbledIncrementer"/>
+    <rule ref="Generic.CodeAnalysis.UnconditionalIfStatement"/>
+    <rule ref="Generic.CodeAnalysis.UnnecessaryFinalModifier"/>
+    <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter"/>
+    <rule ref="Generic.CodeAnalysis.UselessOverridingMethod"/>
+
+    <rule ref="Generic.Formatting.DisallowMultipleStatements"/>
+    <rule ref="Generic.Formatting.MultipleStatementAlignment"/>
+    <rule ref="Generic.Formatting.SpaceAfterCast"/>
+    <rule ref="PEAR.WhiteSpace.ScopeClosingBrace"/>
+    <rule ref="PEAR.WhiteSpace.ScopeIndent"/>-->
+    <!--rule ref="Generic.WhiteSpace.ScopeIndent"/-->
+
+    <rule ref="PEAR.Commenting.InlineComment"/>
+
+<!-- warns about todo comments -->
+
+    <!--rule ref="Generic.Commenting.Todo"/-->
+
+
+
+
+
+
+
+    <!--rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace"/-->
+
+
+
+    <!-- Include some sniffs from all around the place - - >
+    <rule ref="PEAR.ControlStructures.ControlSignature"/>
+    <rule ref="Squiz.Functions.GlobalFunction"/-->
+
+
+</ruleset>
