@@ -8,7 +8,7 @@
  * @author Carsten Brandt <mail@cebe.cc>
  * @package TestCollector
  */
-abstract class TestCollectionAbstract extends CComponent implements Iterator
+abstract class TestCollectionAbstract extends CComponent implements Iterator, Countable
 {
 	private $_position = 0;
 
@@ -50,6 +50,20 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator
 
 		// reset the iterator position
 	    $this->rewind();
+	}
+
+	/**
+	 * countable functionality
+	 *
+	 * @return int
+	 */
+	public function count()
+	{
+		$count = 0;
+		foreach($this as $test) {
+			++$count;
+		}
+		return $count;
 	}
 
 	/**
