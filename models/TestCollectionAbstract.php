@@ -99,7 +99,9 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
 	 */
     public function rewind()
     {
-        $this->_position = 0;
+	    // walk to first valid item
+        $this->_position = -1;
+	    $this->next();
     }
 
     public function current()
@@ -116,10 +118,10 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
     {
 	    ++$this->_position;
 	    // skip tests that do not match scope
-	    while(isset($this->tests[$this->_position]) AND
-		      !$this->scope->matches($this->tests[$this->_position]))
+	    if (isset($this->tests[$this->_position]) AND
+		    !$this->scope->matches($this->tests[$this->_position]))
 	    {
-		    ++$this->_position;
+		    $this->next();
 	    }
     }
 
