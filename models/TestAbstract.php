@@ -6,13 +6,13 @@
  */
 abstract class TestAbstract extends CComponent
 {
-	protected $testClass = null;
+	public $testClass = null;
 
-	protected $reflectionClass = null;
+	public $reflectionClass = null;
 
-	protected $testMethod = null;
+	public $testMethod = null;
 
-	protected $docBlock = '';
+	public $docBlock = '';
 
 	private $_name = '';
 
