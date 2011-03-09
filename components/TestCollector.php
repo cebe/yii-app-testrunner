@@ -58,7 +58,7 @@ class TestCollector extends CComponent
 
 	public function collectTests()
 	{
-		$basePath = $this->getBasePath() . '/';
+		$basePath = $this->getBasePath() . DIRECTORY_SEPARATOR;
 
 		$directories = glob($basePath . '*', GLOB_ONLYDIR);
 		$tests = glob($basePath . '*Test.php');
@@ -66,21 +66,24 @@ class TestCollector extends CComponent
 		for($i=0; $i < count($directories); ++$i)
 		{
 			if (is_dir($directories[$i])) {
-				$subDirectories = glob($directories[$i] . '/*');
+				$subDirectories = glob($directories[$i] . DIRECTORY_SEPARATOR . '*');
 				$directories = array_merge($directories, $subDirectories);
-				$tests = array_merge($tests, glob($directories[$i] . '/*Test.php'));
+				$tests = array_merge($tests, glob($directories[$i] . DIRECTORY_SEPARATOR . '*Test.php'));
 			}
 		}
 
 		$collection = new TestCollection();
 		foreach($tests as $path)
 		{
-			if (preg_match('/\/(.*Test)\.php$/i', $path, $matches)) {
-				$className = $matches[1];
-				require_once($path);
-				$testClass = new $className;
-				$collection->addTest(new TestBase($testClass->getName(), $testClass));
+			$className = substr($path, strrpos($path, DIRECTORY_SEPARATOR) + 1, -4);
+
+			$this->command->p("\n".$path, 3);
+			require_once($path);
+			if (!class_exists($className, false)) {
+				throw new Exception('classfile did not define class ' . $className . '');
 			}
+			$testClass = new $className;
+			$collection->addTest(new TestBase($testClass->getName(), $testClass));
 		}
 
 		return $collection;
