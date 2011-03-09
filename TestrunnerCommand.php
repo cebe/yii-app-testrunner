@@ -31,9 +31,11 @@ class TestrunnerCommand extends CConsoleCommand
 
 	public function init()
 	{
+		Yii::import($this->baseAlias . '.vendors.phpunit.*');
 		Yii::import($this->baseAlias . '.components.*');
 		Yii::import($this->baseAlias . '.models.*');
 		Yii::import($this->baseAlias . '.scopes.*');
+		Yii::import($this->baseAlias . '.*');
 
 		ScopeManager::setInstance(array(
 			'scopePath' => array($this->baseAlias . '.scopes'),
@@ -127,9 +129,9 @@ EOF;
 		$this->p(" - scope is '$scope'\n", 2);
 
 		// loading phpunit
-		Yii::import($this->baseAlias . '.vendors.phpunit.*');
 		require_once('PHPUnit/Autoload.php');
 		$this->addAutoLoad('phpunit_autoload');
+		$this->p(' - phpunit-version: ' . PHPUnit_Runner_Version::id() . "\n", 2);
 
 		if (empty($path)) {
 			$path = $this->testPath;
