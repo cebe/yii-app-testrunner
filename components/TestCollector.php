@@ -56,6 +56,12 @@ class TestCollector extends CComponent
 		$this->command = $command;
 	}
 
+	/**
+	 * collect tests
+	 *
+	 * @throws Exception
+	 * @return TestCollection
+	 */
 	public function collectTests()
 	{
 		$basePath = $this->getBasePath() . DIRECTORY_SEPARATOR;
@@ -77,18 +83,20 @@ class TestCollector extends CComponent
 		{
 			$className = substr($path, strrpos($path, DIRECTORY_SEPARATOR) + 1, -4);
 
-			$this->command->p("\n".$path, 3);
+			$this->command->p("\nincluding " . $path . '...', 3);
 			require_once($path);
+
 			if (!class_exists($className, false)) {
 				throw new Exception('File "' . $path .  '" did not define class "' . $className . '".');
 			}
+
 			$testClass = new $className;
 
 			$reflectionClass = new ReflectionClass($testClass);
 
 			foreach($reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
 				if (substr($method->name, 0, 4) == 'test') {
-					$this->command->p("\n    ".$method->name, 3);
+					$this->command->p("\n    " . $method->name, 3);
 					$collection->addTest(new TestBase($testClass->getName(), clone $testClass, $method->name));
 				}
 			}

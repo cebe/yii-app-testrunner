@@ -4,9 +4,8 @@
  * the version is @package_version@ which Yii will interpret as < 3.5.0RC1 and include wrong files.
  */
 
-class PHPUnit_Runner_Version {
-
-
+class PHPUnit_Runner_Version
+{
 	/**
      * Returns the current version of PHPUnit.
      *
