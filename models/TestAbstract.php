@@ -46,4 +46,6 @@ abstract class TestAbstract extends CComponent
 
 		$this->init();
 	}
+
+	abstract public function run();
 }

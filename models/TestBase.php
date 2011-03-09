@@ -55,5 +55,8 @@ class TestBase extends TestAbstract
 	}
 
 
-
+	public function run()
+	{
+		$this->testMethod->invoke($this->testClass);
+	}
 }

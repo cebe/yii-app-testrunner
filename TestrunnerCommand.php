@@ -184,6 +184,11 @@ EOF;
 
 		$this->p("running tests...\n\n");
 
+
+		foreach($collection as $test) {
+			$test->run();
+		}
+
 		$this->p("finished.\n");
 
 		$this->p("summary:");
