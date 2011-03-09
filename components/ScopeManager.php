@@ -120,6 +120,11 @@ class ScopeManager extends CComponent
 	 */
 	public function getScope($name)
 	{
+		// return class if it's already instantiated
+		if ($name instanceof ScopeAbstract) {
+			return $name;
+		}
+
 		$className = 'Scope' . ucfirst($name);
 		foreach ($this->scopePath as $alias)
 		{
