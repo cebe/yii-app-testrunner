@@ -14,18 +14,23 @@ abstract class TestAbstract extends CComponent
 
 	protected $docBlock = '';
 
-
-	private $_name = null;
+	private $_name = '';
 
 	/**
-	 * should return an array of scopes with criteria
+	 * will be called after construct
 	 *
-	 * @abstract
-	 * @return array
+	 * @return void
 	 */
-	//abstract public function scopes();
+	public function init()
+	{
 
+	}
 
+	/**
+	 * return the name of this test
+	 *
+	 * @return string
+	 */
 	public function getName()
 	{
 		return $this->_name;
@@ -38,14 +43,7 @@ abstract class TestAbstract extends CComponent
 		$this->reflectionClass = new ReflectionClass($testClass);
 		$this->testMethod = $this->reflectionClass->getMethod($testMethod);
 		$this->docBlock = $this->testMethod->getDocComment();
+
+		$this->init();
 	}
-
-	/**
-	 * Check if a Test matches a given scope
-	 *
-	 * @abstract
-	 * @return boolean
-	 */
-	//abstract public function matchesScope();
-
 }
