@@ -97,7 +97,13 @@ class TestCollector extends CComponent
 			foreach($reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
 				if (substr($method->name, 0, 4) == 'test') {
 					$this->command->p("\n    " . $method->name, 3);
-					$collection->addTest(new TestBase($testClass->getName(), clone $testClass, $method->name));
+					$collection->addTest(
+						new TestBase(
+							$method->name,
+							new $testClass($method->name, array(), ''),
+							$method->name
+						)
+					);
 				}
 			}
 		}
