@@ -80,30 +80,20 @@ class TestCollector extends CComponent
 			$this->command->p("\n".$path, 3);
 			require_once($path);
 			if (!class_exists($className, false)) {
-				throw new Exception('classfile did not define class ' . $className . '');
+				throw new Exception('File "' . $path .  '" did not define class "' . $className . '".');
 			}
 			$testClass = new $className;
-			$collection->addTest(new TestBase($testClass->getName(), $testClass));
+
+			$reflectionClass = new ReflectionClass($testClass);
+
+			foreach($reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+				if (substr($method->name, 0, 4) == 'test') {
+					$this->command->p("\n    ".$method->name, 3);
+					$collection->addTest(new TestBase($testClass->getName(), clone $testClass, $method->name));
+				}
+			}
 		}
 
 		return $collection;
-	}
-
-	public function collectTestsByPath()
-	{
-
-		return new TestCollection();
-	}
-
-	public function collectTestsByTag()
-	{
-
-		return new TestCollection();
-	}
-
-	public function collectTestsByWheaterAndTemper()
-	{
-
-		return new TestCollection();
 	}
 }

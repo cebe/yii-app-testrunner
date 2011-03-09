@@ -6,7 +6,14 @@
  */
 abstract class TestAbstract extends CComponent
 {
-	protected $unitTest = null;
+	protected $testClass = null;
+
+	protected $reflectionClass = null;
+
+	protected $testMethod = null;
+
+	protected $docBlock = '';
+
 
 	private $_name = null;
 
@@ -24,10 +31,13 @@ abstract class TestAbstract extends CComponent
 		return $this->_name;
 	}
 
-	public function __construct($name, $unitTest=null)
+	public function __construct($name, $testClass, $testMethod)
 	{
 		$this->_name = $name;
-		$this->unitTest = $unitTest;
+		$this->testClass = $testClass;
+		$this->reflectionClass = new ReflectionClass($testClass);
+		$this->testMethod = $this->reflectionClass->getMethod($testMethod);
+		$this->docBlock = $this->testMethod->getDocComment();
 	}
 
 	/**
