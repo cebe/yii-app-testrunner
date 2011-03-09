@@ -24,10 +24,9 @@ class TestRunner extends CComponent
 
 		foreach($collection as $test)
 		{
-			try {
-				$test->run();
+			if ($test->run()) {
 				echo '.';
-			} catch (Exception $e) {
+			} else {
 				echo 'E';
 			}
 		}
