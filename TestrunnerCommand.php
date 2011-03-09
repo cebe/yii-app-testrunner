@@ -17,6 +17,13 @@ class TestrunnerCommand extends CConsoleCommand
 	public $verbose = 1;
 
 	/**
+	 * base path to search for tests
+	 *
+	 * @var string
+	 */
+	public $testPath = 'application.tests';
+
+	/**
 	 *
 	 * @var string
 	 */
@@ -103,7 +110,7 @@ EOF;
 	 *
 	 * @return void
 	 */
-	public function actionRunTests($bootstrap='', $scope='all', $verbose=1, $quiet=false)
+	public function actionRunTests($path='', $bootstrap='', $scope='all', $verbose=1, $quiet=false)
 	{
 		// handle verbosity first
 		if ($quiet) {
@@ -119,15 +126,41 @@ EOF;
 
 		$this->p(" - scope is '$scope'\n", 2);
 
-		if (!empty($bootstrap)) {
+		// loading phpunit
+		Yii::import($this->baseAlias . '.vendors.phpunit.*');
+		require_once('PHPUnit/Autoload.php');
+		$this->addAutoLoad('phpunit_autoload');
 
-			$bootstrapFile = Yii::getPathOfAlias('application.tests') . '/' . $bootstrap;
+		if (empty($path)) {
+			$path = $this->testPath;
+		}
 
-			if (file_exists($bootstrapFile)) {
-				include($bootstrapFile);
-			} else {
-				include($bootstrap);
-			}
+		// basePath
+		$testPath = Yii::getPathOfAlias($path);
+		if ($testPath === false) {
+			$testPath = $path;
+		} else {
+			Yii::import($path . '.*');
+		}
+
+		if (!file_exists($testPath)) {
+			$this->p(' - ERROR: testPath does not exist: ' . $path . "\n");
+			exit(1);
+		}
+
+		$this->p(" - testPath is '$testPath'\n", 2);
+
+		if (empty($bootstrap)) {
+			$bootstrap = $testPath . '/bootstrap.php';
+		} elseif (!file_exists($bootstrap)) {
+			$bootstrap = $testPath . '/' . $bootstrap;
+		}
+
+		if (file_exists($bootstrap)) {
+			$this->p("running bootstrap script...\n");
+			include($bootstrap);
+		} else {
+			$this->p(" - no bootstrap file found\n", 2);
 		}
 
 		$this->p("collecting tests...");
@@ -200,6 +233,26 @@ EOF;
 				$this->p("added $path to include_path\n", 2);
 			}
 			$this->p("\nphp include_path is now " . get_include_path() . "\n\n", 3);
+		}
+	}
+
+	protected function addAutoLoad($newFunction)
+	{
+		$functions = spl_autoload_functions();
+		foreach($functions as $key => $function) {
+			spl_autoload_unregister($function);
+			// unset if already exists
+			if ((is_array($function) AND
+				$function[0] == $newFunction[0] AND
+				$function[1] == $newFunction[1])
+				OR $function == $newFunction)
+			{
+				unset($functions[$key]);
+			}
+		}
+		array_unshift($functions, $newFunction);
+		foreach($functions as $function) {
+			spl_autoload_register($function);
 		}
 	}
 
