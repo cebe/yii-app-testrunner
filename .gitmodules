@@ -1,3 +1,6 @@
 [submodule "vendors/phpunit"]
 	path = vendors/phpunit
 	url = https://github.com/sebastianbergmann/phpunit.git
+[submodule "vendors/php-code-coverage"]
+	path = vendors/php-code-coverage
+	url = https://github.com/sebastianbergmann/php-code-coverage.git
