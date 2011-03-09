@@ -16,6 +16,11 @@ class TestBase extends TestAbstract
 	protected $attributes = array();
 
 	/**
+	 * results
+	 */
+	public $results = null;
+
+	/**
 	 *
 	 * @return mixed
 	 */
@@ -57,6 +62,24 @@ class TestBase extends TestAbstract
 
 	public function run()
 	{
-		$this->testMethod->invoke($this->testClass);
+		echo "running " . $this->testClass->toString() . "\n";
+
+		// dependencies are handled by own behavior
+		$this->testClass->setDependencies(array());
+
+		// @todo: implement code coverage here
+		$codeCoverage = null;
+
+		$result = new PHPUnit_Framework_TestResult($codeCoverage);
+
+		$this->testClass->setDependencyInput(array('bla'));
+		// will call testMethod with arguments: array_merge($this->data, $this->dependencyInput)
+		// setDependencyInput
+		// data and dataName are set to array() on testCase object creation
+		$this->testClass->run($result);
+
+		$this->results = $result;
+
+		return $result->wasSuccessful();
 	}
 }
