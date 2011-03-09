@@ -11,6 +11,48 @@
 class ScopeManager extends CComponent
 {
 	/**
+	 * the singleton instance of ScopeManager
+	 *
+	 * @var null|ScopeManager
+	 */
+	static private $_instance = null;
+
+	/**
+	 * get the singleton instance of ScopeManager
+	 *
+	 * @static
+	 * @return ScopeManager
+	 */
+	static public function getInstance($config = null)
+	{
+		if (null === static::$_instance)
+		{
+			throw new CException('Instance of ScopeManager can only be created once!');
+		}
+
+		return static::$_instance;
+	}
+
+	/**
+	 * creates and configure the singleton instance of ScopeManager
+	 *
+	 * @static
+	 */
+	static public function setInstance($config)
+	{
+		if (null === static::$_instance) {
+			static::$_instance = new ScopeManager();
+			static::$_instance->configure($config);
+		} else {
+			throw new CException('Instance of ScopeManager can only be created once!');
+		}
+	}
+
+	private function __construct(){}
+	private function __clone(){}
+
+
+	/**
 	 * list of paths to search for scope classes
 	 *
 	 * default path is application.models.scopes
@@ -24,6 +66,20 @@ class ScopeManager extends CComponent
 	public function init()
 	{
 		// nothing
+	}
+
+	/**
+	 * Configures the class with the specified configuration.
+	 * @param array $config the configuration array
+	 */
+	public function configure($config)
+	{
+		if (is_array($config))
+		{
+			foreach($config as $key => $value) {
+				$this->$key = $value;
+			}
+		}
 	}
 
 	/**

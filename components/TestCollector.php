@@ -72,7 +72,7 @@ class TestCollector extends CComponent
 			}
 		}
 
-		$collection = new TestCollection($this->command->scopeManager);
+		$collection = new TestCollection();
 		foreach($tests as $path)
 		{
 			if (preg_match('/\/(.*Test)\.php$/i', $path, $matches)) {

@@ -22,17 +22,15 @@ class TestrunnerCommand extends CConsoleCommand
 	 */
 	public $baseAlias = 'application.commands.testRunner';
 
-	public $scopeManager = null;
-
-
 	public function init()
 	{
 		Yii::import($this->baseAlias . '.components.*');
 		Yii::import($this->baseAlias . '.models.*');
 		Yii::import($this->baseAlias . '.scopes.*');
 
-		$this->scopeManager = new ScopeManager();
-		$this->scopeManager->scopePath = array($this->baseAlias . '.scopes');
+		ScopeManager::setInstance(array(
+			'scopePath' => array($this->baseAlias . '.scopes'),
+		));
 	}
 
 	/**
@@ -122,7 +120,14 @@ EOF;
 		$this->p(" - scope is '$scope'\n", 2);
 
 		if (!empty($bootstrap)) {
-			include($bootstrap);
+
+			$bootstrapFile = Yii::getPathOfAlias('application.tests') . '/' . $bootstrap;
+
+			if (file_exists($bootstrapFile)) {
+				include($bootstrapFile);
+			} else {
+				include($bootstrap);
+			}
 		}
 
 		$this->p("collecting tests...");
@@ -158,7 +163,7 @@ EOF;
 	{
 		echo 'list of available scopes:' . "\n\n";
 
-		$list = $this->scopeManager->listScopes();
+		$list = ScopeManager::getInstance()->listScopes();
 
 		$maxlen = 6;
 		foreach ($list as $name => $description) {
