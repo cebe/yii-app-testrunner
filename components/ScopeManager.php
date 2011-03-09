@@ -23,7 +23,7 @@ class ScopeManager extends CComponent
 	 * @static
 	 * @return ScopeManager
 	 */
-	static public function getInstance($config = null)
+	static public function getInstance()
 	{
 		if (null === static::$_instance)
 		{
@@ -48,9 +48,21 @@ class ScopeManager extends CComponent
 		}
 	}
 
-	private function __construct(){}
-	private function __clone(){}
+	/**
+	 * private du to the fact that ScopeManager is a singleton
+	 */
+	private function __construct()
+	{
 
+	}
+
+	/**
+	 * private du to the fact that ScopeManager is a singleton
+	 */
+	private function __clone()
+	{
+
+	}
 
 	/**
 	 * list of paths to search for scope classes
