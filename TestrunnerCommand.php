@@ -23,6 +23,10 @@ class TestrunnerCommand extends CConsoleCommand
 	 */
 	public $testPath = 'application.tests';
 
+	public $testRunner = array(
+		'class' => 'TestRunner',
+	);
+
 	/**
 	 * Base Yii-alias for testRunnerCommand
 	 *
@@ -48,6 +52,31 @@ class TestrunnerCommand extends CConsoleCommand
 		ScopeManager::setInstance(array(
 			'scopePath' => array($this->baseAlias . '.scopes'),
 		));
+	}
+	/**
+	 *
+	 * @return TestRunner
+	 */
+	public function getTestRunner()
+	{
+		$config = $this->testRunner;
+
+		if (isset($config['class'])) {
+			$class = $config['class'];
+			unset($config['class']);
+		} else {
+			$class = 'TestRunner';
+		}
+
+		if (($pos = strripos($class, '.')) !== false) {
+			Yii::import($class);
+			$class = substr($class, $pos + 1);
+		}
+		$runner = new $class();
+
+		$runner->configure($config);
+
+		return $runner;
 	}
 
 	/**
@@ -168,7 +197,8 @@ EOF;
 
 		$this->p("running tests...\n\n");
 
-		$runner = new TestRunner($collection);
+		$runner = $this->getTestRunner();
+		$runner->collection = $collection;
 		$runner->run();
 
 
