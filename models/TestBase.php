@@ -64,8 +64,6 @@ class TestBase extends TestAbstract
 
 	public function run()
 	{
-		echo "running " . $this->testClass->toString() . "\n";
-
 		// dependencies are handled by own behavior
 		$this->testClass->setDependencies(array());
 

@@ -27,6 +27,10 @@ return array(
 				 * attach behaviors to testRunner class
 				 */
 				'behaviors'=>array(
+					'phpunitStyle' => array(
+						'class' => 'application.commands.testRunner.behaviors.TestOutputPhpUnitStyleBehavior',
+					),
+
 					'dependencies' => array(
 						'class' => 'application.commands.testRunner.behaviors.TestDependencyBehavior',
 						//'depends' => array('countryName'),

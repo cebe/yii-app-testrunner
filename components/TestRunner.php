@@ -23,11 +23,9 @@ class TestRunner extends TestRunnerAbstract
 			// raise event
 			$this->onBeforeTest($test);
 
-			if ($test->run()) {
-				echo '.';
-			} else {
-				echo 'E';
-			}
+			// run test
+			$test->run();
+
 			// raise event
 			$this->onAfterTest($test);
 		}
