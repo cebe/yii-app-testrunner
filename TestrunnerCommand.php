@@ -49,6 +49,7 @@ class TestrunnerCommand extends CConsoleCommand
 	public function init()
 	{
 		Yii::import($this->baseAlias . '.vendors.phpunit.*');
+		Yii::import($this->baseAlias . '.behaviors.*');
 		Yii::import($this->baseAlias . '.components.*');
 		Yii::import($this->baseAlias . '.models.*');
 		Yii::import($this->baseAlias . '.scopes.*');
