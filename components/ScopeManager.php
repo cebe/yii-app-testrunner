@@ -11,6 +11,13 @@
 class ScopeManager extends CComponent
 {
 	/**
+	 * the correcsponding command
+	 *
+	 * @var TestrunnerCommand
+	 */
+	public $command = null;
+
+	/**
 	 * the singleton instance of ScopeManager
 	 *
 	 * @var null|ScopeManager
@@ -36,12 +43,15 @@ class ScopeManager extends CComponent
 	/**
 	 * creates and configure the singleton instance of ScopeManager
 	 *
+	 * @param array a configuration array
+	 * @param TestrunnerCommand the correcsponding command
 	 * @static
 	 */
-	static public function setInstance($config)
+	static public function setInstance($config, $command=null)
 	{
 		if (null === static::$_instance) {
 			static::$_instance = new ScopeManager();
+			static::$_instance->command = $command;
 			static::$_instance->configure($config);
 		} else {
 			throw new CException('Instance of ScopeManager can only be created once!');

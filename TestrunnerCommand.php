@@ -55,9 +55,12 @@ class TestrunnerCommand extends CConsoleCommand
 		Yii::import($this->baseAlias . '.scopes.*');
 		Yii::import($this->baseAlias . '.*');
 
-		ScopeManager::setInstance(array(
-			'scopePath' => array($this->baseAlias . '.scopes'),
-		));
+		ScopeManager::setInstance(
+			array(
+				'scopePath' => array($this->baseAlias . '.scopes'),
+			),
+			$this
+		);
 	}
 	/**
 	 *
