@@ -32,7 +32,7 @@ class TestBase extends TestAbstract
 			return $this->attributes[$name];
 		}
 
-		parent::__get($name);
+		return parent::__get($name);
 	}
 
 	public function init()
