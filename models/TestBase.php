@@ -90,13 +90,31 @@ class TestBase extends TestAbstract
 		return (count($this->results->errors()) > 0);
 	}
 
+	public function getErrorMessage()
+	{
+		$message = '';
+		foreach($this->results->errors() as $error) {
+			$message .= $error->getExceptionAsString() . "\n";
+		}
+		return $message;
+	}
+
 	public function getFailed()
 	{
 		return (count($this->results->failures()) > 0);
 	}
 
+	public function getFailureMessage()
+	{
+		$message = '';
+		foreach($this->results->failures() as $failure) {
+			$message .= $failure->getExceptionAsString() . "\n";
+		}
+		return $message;
+	}
+
 	public function getPassed()
 	{
-		return (count($this->results->passed()) > 0);
+		return !$this->getError() && !$this->getFailed();
 	}
 }
