@@ -78,7 +78,7 @@ class TestrunnerCommand extends CConsoleCommand
 			Yii::import($class);
 			$class = substr($class, $pos + 1);
 		}
-		$runner = new $class();
+		$runner = new $class($this);
 		$runner->configure($config);
 		$runner->init();
 

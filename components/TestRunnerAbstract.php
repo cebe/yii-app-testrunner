@@ -14,14 +14,19 @@ abstract class TestRunnerAbstract extends CApplicationComponent
 	public $collection = null;
 
 	/**
+	 * the correcsponding command
 	 *
-	 * @param TestCollectionAbstract|null $collection
+	 * @var TestrunnerCommand
 	 */
-	public function __construct($collection=null)
+	public $command = null;
+
+	/**
+	 *
+	 * @param null|TestrunnerCommand $command
+	 */
+	public function __construct($command=null)
 	{
-		if (!is_null($collection)) {
-			$this->collection = $collection;
-		}
+		$this->command = $command;
 	}
 
 	/**
