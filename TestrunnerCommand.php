@@ -24,11 +24,19 @@ class TestrunnerCommand extends CConsoleCommand
 	public $testPath = 'application.tests';
 
 	/**
+	 * Base Yii-alias for testRunnerCommand
+	 *
+	 * set this to the directory where you added the command to your application
 	 *
 	 * @var string
 	 */
 	public $baseAlias = 'application.commands.testRunner';
 
+	/**
+	 * initialize Command, scopemanager and include aliases
+	 *
+	 * @return void
+	 */
 	public function init()
 	{
 		Yii::import($this->baseAlias . '.vendors.phpunit.*');
@@ -114,15 +122,8 @@ EOF;
 	 */
 	public function actionRunTests($path='', $bootstrap='', $scope='all', $verbose=1, $quiet=false)
 	{
-		// handle verbosity first
-		if ($quiet) {
-			$this->verbose = 0;
-		} else {
-			$this->verbose = $verbose;
-			if ($this->verbose > 1) {
-				$this->p('verbosity is ' . $this->verbose . "\n");
-			}
-		}
+		$this->handleVerbosity($verbose, $quiet);
+
 
 		$this->p("preparing...\n", 2);
 
@@ -133,11 +134,82 @@ EOF;
 		$this->addAutoLoad('phpunit_autoload');
 		$this->p(' - phpunit-version: ' . PHPUnit_Runner_Version::id() . "\n", 2);
 
+		// select testPath
+		$testPath = $this->selectTestPath($path);
+		$this->p(" - testPath is '$testPath'\n", 2);
+
+		$this->handleBootstrap($bootstrap, $testPath);
+
+
+
+		$this->p("collecting tests...");
+
+		$testCollector = new TestCollector($this);
+		$testCollector->setBasePath($testPath);
+		$collection = $testCollector->collectTests();
+
+		$this->p(" - " . count($collection) . " tests found\n");
+
+
+
+		$this->p("filtering tests... ");
+
+		// @todo: add possibility to apply more scopes
+		$collection->applyScope($scope);
+
+		$this->p(" - " . ($count = count($collection)) . " tests to run\n");
+
+		if ($count < 1) { // @todo: consider not to break here...
+			$this->p("no tests to run -> exiting\n");
+			exit(0);
+		}
+
+
+
+		$this->p("running tests...\n\n");
+
+		$runner = new TestRunner($collection);
+		$runner->run();
+
+
+
+		$this->p("finished.\n");
+		$this->p("summary: (coming soon ;-) )\n");
+	}
+
+	/**
+	 * check if verbosity was given as parameter and set it
+	 *
+	 * @param  $verbose
+	 * @param bool $quiet
+	 * @return void
+	 */
+	public function handleVerbosity($verbose, $quiet=false)
+	{
+		if ($quiet) {
+			$this->verbose = 0;
+		} else {
+			$this->verbose = $verbose;
+			if ($this->verbose > 1) {
+				$this->p('verbosity is ' . $this->verbose . "\n");
+			}
+		}
+	}
+
+	/**
+	 * find the path where tests are
+	 *
+	 * get as param or config/default value
+	 *
+	 * @param  $path
+	 * @return mixed|string
+	 */
+	public function selectTestPath($path)
+	{
 		if (empty($path)) {
 			$path = $this->testPath;
 		}
 
-		// basePath
 		$testPath = Yii::getPathOfAlias($path);
 		if ($testPath === false) {
 			$testPath = $path;
@@ -149,9 +221,18 @@ EOF;
 			$this->p(' - ERROR: testPath does not exist: ' . $path . "\n");
 			exit(1);
 		}
+		return $testPath;
+	}
 
-		$this->p(" - testPath is '$testPath'\n", 2);
-
+	/**
+	 * find bootstrap file and run it if found
+	 *
+	 * @param  $bootstrap
+	 * @param  $testPath
+	 * @return void
+	 */
+	public function handleBootstrap($bootstrap, $testPath)
+	{
 		if (empty($bootstrap)) {
 			$bootstrap = $testPath . '/bootstrap.php';
 		} elseif (!file_exists($bootstrap)) {
@@ -164,32 +245,6 @@ EOF;
 		} else {
 			$this->p(" - no bootstrap file found\n", 2);
 		}
-
-		$this->p("collecting tests...");
-
-		$testCollector = new TestCollector($this);
-		$testCollector->setBasePath(Yii::getPathOfAlias('application.tests'));
-		$collection = $testCollector->collectTests();
-
-		$this->p(" - " . count($collection) . " tests found\n", 1);
-
-		$this->p("filtering tests... ");
-
-		$collection->applyScope($scope);
-		$this->p(" - " . ($count = count($collection)) . " tests to run\n", 1);
-		if ($count < 1) {
-			$this->p("no tests to run -> exiting\n", 1);
-			exit(0);
-		}
-
-		$this->p("running tests...\n\n");
-
-		$runner = new TestRunner($collection);
-		$runner->run();
-
-		$this->p("finished.\n");
-
-		$this->p("summary:");
 	}
 
 	/**
@@ -219,28 +274,15 @@ EOF;
 		exit();
 	}
 
-
-	protected function handleIncludePath($includePath)
-	{
-		if (!empty($includePath)) {
-			$includePaths = explode(',', $includePath);
-
-			$phpIncludePaths = array_unique(explode(PATH_SEPARATOR, get_include_path()));
-			if (($pos = array_search('.', $phpIncludePaths, true)) !== false) {
-				unset($phpIncludePaths[$pos]);
-			}
-
-			if (set_include_path('.' . PATH_SEPARATOR . implode(PATH_SEPARATOR, array_merge($includePaths, $phpIncludePaths))) === false) {
-				throw new CException(Yii::t('yii','Unable to import "{alias}". Please check your server configuration to make sure you are allowed to change PHP include_path.',array('{alias}'=>$alias)));
-			}
-
-			foreach($includePaths as $path) {
-				$this->p("added $path to include_path\n", 2);
-			}
-			$this->p("\nphp include_path is now " . get_include_path() . "\n\n", 3);
-		}
-	}
-
+	/**
+	 * adds an autoloader at first position
+	 *
+	 * Yii autoload should be the last because it tries to
+	 * include files that do not exist if non-yii classes are loaded
+	 *
+	 * @param  $newFunction
+	 * @return void
+	 */
 	protected function addAutoLoad($newFunction)
 	{
 		$functions = spl_autoload_functions();
@@ -261,7 +303,6 @@ EOF;
 		}
 	}
 
-
 	/**
 	 * print text based on verbosity
 	 *
@@ -274,5 +315,4 @@ EOF;
 		}
 
 	}
-
 }
