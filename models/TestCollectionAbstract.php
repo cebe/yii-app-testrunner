@@ -102,7 +102,14 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
 	 */
 	protected function matchesScope(TestAbstract $test)
 	{
-		return $this->scope->matches($test);
+		static $scopeCache = array();
+
+		$name = $test->name;
+		if (!isset($scopeCache[$name])) {
+			$scopeCache[$name] = $this->scope->matches($test);
+		}
+
+		return $scopeCache[$name];
 	}
 
 	/**
