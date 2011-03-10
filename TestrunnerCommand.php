@@ -23,6 +23,11 @@ class TestrunnerCommand extends CConsoleCommand
 	 */
 	public $testPath = 'application.tests';
 
+	/**
+	 * configuration for testRunner
+	 *
+	 * @var array
+	 */
 	public $testRunner = array(
 		'class' => 'TestRunner',
 	);
@@ -73,8 +78,8 @@ class TestrunnerCommand extends CConsoleCommand
 			$class = substr($class, $pos + 1);
 		}
 		$runner = new $class();
-
 		$runner->configure($config);
+		$runner->init();
 
 		return $runner;
 	}

@@ -4,7 +4,7 @@
  * @author Carsten Brandt <mail@cebe.cc>
  * @package TestRunner
  */
-abstract class TestRunnerAbstract extends CComponent
+abstract class TestRunnerAbstract extends CApplicationComponent
 {
 	/**
 	 * The TestCollection of test to be run
