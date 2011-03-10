@@ -184,8 +184,8 @@ EOF;
 
 		$this->p("running tests...\n\n");
 
-		$runner = new TestRunner();
-		$runner->run($collection);
+		$runner = new TestRunner($collection);
+		$runner->run();
 
 		$this->p("finished.\n");
 

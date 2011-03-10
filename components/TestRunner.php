@@ -6,47 +6,98 @@
  */
 class TestRunner extends CComponent
 {
+	/**
+	 * The TestCollection of test to be run
+	 *
+	 * @var TestCollectionAbstract|null
+	 */
+	public $collection = null;
 
-	public function __construct()
+	/**
+	 *
+	 * @param TestCollectionAbstract|null $collection
+	 */
+	public function __construct($collection=null)
 	{
-
+		if (!is_null($collection)) {
+			$this->collection = $collection;
+		}
 	}
 
-
-	public function prepareRunning()
+	/**
+	 * run tests
+	 *
+	 * all further functionality should be added as behaviors
+	 *
+	 * @return void
+	 */
+	public function run()
 	{
+		// raise event
+		$this->onBeforeRun();
 
-	}
-
-	public function run($collection)
-	{
-		$this->raiseEvent('onBeforeRun', new TestRunnerEvent($this, $collection));
-
-		$this->prepareRunning();
-
-		foreach($collection as $test)
+		foreach($this->collection as $test)
 		{
-			$this->raiseEvent('onBeforeTest', new TestRunnerEvent($this, $collection, $test));
+			// raise event
+			$this->onBeforeTest($test);
+
 			if ($test->run()) {
 				echo '.';
 			} else {
 				echo 'E';
 			}
-			$this->raiseEvent('onAfterTest', new TestRunnerEvent($this, $collection, $test));
+			// raise event
+			$this->onAfterTest($test);
 		}
 
-		$this->afterRunning();
-
-		$this->raiseEvent('onAfterRun', new TestRunnerEvent($this, $collection));
+		// raise event
+		$this->onAfterRun();
 	}
 
-	public function afterRunning()
+	/**
+	 * Event that is raised before running a test sequence
+	 *
+	 * @return void
+	 */
+	public function onBeforeRun()
 	{
+		$this->raiseEvent('onBeforeRun', new TestRunnerEvent($this, $this->collection));
+	}
 
+	/**
+	 * Event that is raised before every single test run
+	 *
+	 * @return void
+	 */
+	public function onBeforeTest($test)
+	{
+		$this->raiseEvent('onBeforeTest', new TestRunnerEvent($this, $this->collection, $test));
+	}
+
+	/**
+	 * Event that is raised after every single test run
+	 *
+	 * @return void
+	 */
+	public function onAfterTest($test)
+	{
+		$this->raiseEvent('onAfterTest', new TestRunnerEvent($this, $this->collection, $test));
+	}
+
+	/**
+	 * Event that is raised after every tests ran
+	 *
+	 * @return void
+	 */
+	public function onAfterRun()
+	{
+		$this->raiseEvent('onAfterRun', new TestRunnerEvent($this, $this->collection));
 	}
 }
 
 /**
+ * Events that are raised from TestRunner
+ *
  * @author Carsten Brandt <mail@cebe.cc>
  * @package TestRunner
  */
