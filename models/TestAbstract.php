@@ -33,7 +33,7 @@ abstract class TestAbstract extends CComponent
 	 */
 	public function getName()
 	{
-		return $this->_name;
+		return get_class($this->testClass) . '::' . $this->_name;
 	}
 
 	public function __construct($name, $testClass, $testMethod)
