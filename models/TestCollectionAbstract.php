@@ -63,6 +63,17 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
 	}
 
 	/**
+	 * check if a tests matches current scope
+	 *
+	 * @param  $test
+	 * @return bool
+	 */
+	protected function matchesScope($test)
+	{
+		return $this->scope->matches($test);
+	}
+
+	/**
 	 *
 	 */
 	public function __construct()
@@ -119,7 +130,7 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
 	    ++$this->_position;
 	    // skip tests that do not match scope
 	    if (isset($this->tests[$this->_position]) AND
-		    !$this->scope->matches($this->tests[$this->_position]))
+		    !$this->matchesScope($this->tests[$this->_position]))
 	    {
 		    $this->next();
 	    }
@@ -128,6 +139,6 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
     public function valid()
     {
         return (isset($this->tests[$this->_position]) AND
-		        $this->scope->matches($this->tests[$this->_position]));
+		        $this->matchesScope($this->tests[$this->_position]));
     }
 }
