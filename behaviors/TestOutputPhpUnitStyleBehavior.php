@@ -7,34 +7,27 @@
  */
 class TestOutputPhpUnitStyleBehavior extends TestRunnerBehaviorAbstract
 {
-	public function events()
-	{
-		return array(
-			'onBeforeTest' => 'beforeTest',
-			'onAfterTest' => 'afterTest',
-			'onAfterRun' => 'afterRun',
-		);
-	}
-
 	public function beforeTest(TestRunnerEvent $event)
 	{
 		if ($this->owner->command->verbose > 1) {
-			echo "running " . $event->currentTest->testClass->toString() . "\n";
+			echo "running " . $event->currentTest->testClass->toString() . " ";
 		}
 	}
 
 	public function afterTest(TestRunnerEvent $event)
 	{
+		$v = ($this->owner->command->verbose > 1);
+
 		switch(true)
 		{
 			case $event->currentTest->error:
-				echo 'E';
+				echo $v ? 'error' . "\n" : 'E';
 			break;
 			case $event->currentTest->failed:
-				echo 'F';
+				echo $v ? 'failed' . "\n" : 'F';
 			break;
 			case $event->currentTest->passed:
-				echo '.';
+				echo $v ? 'ok' . "\n" : '.';
 			break;
 		}
 	}
