@@ -3,6 +3,7 @@
 /**
  * behavoir that handles test dependencies
  *
+ * @package Behaviors
  */
 class TestDependencyBehavior extends TestRunnerBehaviorAbstract
 {

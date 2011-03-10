@@ -2,8 +2,9 @@
 /**
  * This Class exists to work around the problem that in git checkedout code of phpunit
  * the version is @package_version@ which Yii will interpret as < 3.5.0RC1 and include wrong files.
+ *
+ * @package PHPUnit
  */
-
 class PHPUnit_Runner_Version
 {
 	/**
