@@ -14,6 +14,10 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
 
 	protected $tests = array();
 
+	protected $includedTests = array();
+
+	protected $excludedTests = array();
+
 	/**
 	 * current scope for filtering which tests are run
 	 *
@@ -50,6 +54,34 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
 	}
 
 	/**
+	 * with this function you can explicitly enable tests (ignoring scope)
+	 *
+	 * @param  $name
+	 * @return void
+	 */
+	public function includeTest($name)
+	{
+		if (isset($this->excludedTests[$name])) {
+			unset($this->excludedTests[$name]);
+		}
+		$this->includedTests[$name] = $name;
+	}
+
+	/**
+	 * with this function you can explicitly disable tests
+	 *
+	 * @param  $name
+	 * @return void
+	 */
+	public function excludeTest($name)
+	{
+		if (isset($this->includedTests[$name])) {
+			unset($this->includedTests[$name]);
+		}
+		$this->excludedTests[$name] = $name;
+	}
+
+	/**
 	 *
 	 */
 	public function applyScope($scope)
@@ -65,10 +97,10 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
 	/**
 	 * check if a tests matches current scope
 	 *
-	 * @param  $test
+	 * @param TestAbstract $test
 	 * @return bool
 	 */
-	protected function matchesScope($test)
+	protected function matchesScope(TestAbstract $test)
 	{
 		return $this->scope->matches($test);
 	}
@@ -87,6 +119,23 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
 
 		// reset the iterator position
 	    $this->rewind();
+	}
+
+	/**
+	 * check if a Test is included in this collection
+	 *
+	 * @param TestAbstract $test
+	 * @return bool
+	 */
+	public function isIncluded(TestAbstract $test)
+	{
+		if (isset($this->excludedTests[$test->name])) {
+			return false;
+		}
+		if (isset($this->includedTests[$test->name])) {
+			return true;
+		}
+		return $this->matchesScope($test);
 	}
 
 	/**
@@ -130,7 +179,7 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
 	    ++$this->_position;
 	    // skip tests that do not match scope
 	    if (isset($this->tests[$this->_position]) AND
-		    !$this->matchesScope($this->tests[$this->_position]))
+		    !$this->isIncluded($this->tests[$this->_position]))
 	    {
 		    $this->next();
 	    }
@@ -139,6 +188,6 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
     public function valid()
     {
         return (isset($this->tests[$this->_position]) AND
-		        $this->matchesScope($this->tests[$this->_position]));
+		        $this->isIncluded($this->tests[$this->_position]));
     }
 }
