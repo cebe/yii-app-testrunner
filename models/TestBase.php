@@ -17,6 +17,8 @@ class TestBase extends TestAbstract
 
 	/**
 	 * results
+	 *
+	 * @var PHPUnit_Framework_TestResult
 	 */
 	public $results = null;
 
@@ -81,5 +83,20 @@ class TestBase extends TestAbstract
 		$this->results = $result;
 
 		return $result->wasSuccessful();
+	}
+
+	public function getError()
+	{
+		return (count($this->results->errors()) > 0);
+	}
+
+	public function getFailed()
+	{
+		return (count($this->results->failures()) > 0);
+	}
+
+	public function getPassed()
+	{
+		return (count($this->results->passed()) > 0);
 	}
 }
