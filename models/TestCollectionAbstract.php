@@ -12,6 +12,10 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
 {
 	private $_position = 0;
 
+	private $_nextIndex = 0;
+
+	protected $nameIndexMap = array();
+
 	protected $tests = array();
 
 	protected $includedTests = array();
@@ -52,7 +56,35 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
 
 	public function addTest($test)
 	{
-		$this->tests[] = $test;
+		$this->tests[$this->_nextIndex] = $test;
+		$this->nameIndexMap[$test->name][] = $this->_nextIndex;
+
+		++$this->_nextIndex;
+	}
+
+	/**
+	 * returns all tests with that name
+	 * tests can be added multiple times to we always return an array
+	 *
+	 * @param  $name
+	 * @param boolean $includedOnly
+	 * @return array
+	 */
+	public function getTestsByName($name, $includedOnly=false)
+	{
+		if (isset($this->nameIndexMap[$name]))
+		{
+			$testIndexes = $this->nameIndexMap[$name];
+			$tests = array();
+			foreach($testIndexes as $index) {
+				if (!$includedOnly OR $this->isIncluded($this->tests[$index])) {
+					$tests[] = $this->tests[$index];
+				}
+			}
+
+			return $tests;
+		}
+		return array();
 	}
 
 	/**
