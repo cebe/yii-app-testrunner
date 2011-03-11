@@ -35,6 +35,15 @@ class TestBase extends TestAbstract
 		return parent::__get($name);
 	}
 
+	/**
+	 *
+	 * @return mixed
+	 */
+	public function __isset($name)
+	{
+		return (isset($this->attributes[$name]) OR parent::__isset($name));
+	}
+
 	public function init()
 	{
 		parent::init();
