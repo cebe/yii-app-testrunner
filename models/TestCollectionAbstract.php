@@ -90,11 +90,15 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
 	/**
 	 * with this function you can explicitly enable tests (ignoring scope)
 	 *
-	 * @param  $name
+	 * @param string|TestAbstract $name
 	 * @return void
 	 */
 	public function includeTest($name)
 	{
+		if ($name instanceof TestAbstract) {
+			$name = $name->name;
+		}
+
 		if (isset($this->excludedTests[$name])) {
 			unset($this->excludedTests[$name]);
 		}
@@ -104,11 +108,15 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
 	/**
 	 * with this function you can explicitly disable tests
 	 *
-	 * @param  $name
+	 * @param string|testAbstract $name
 	 * @return void
 	 */
 	public function excludeTest($name)
 	{
+		if ($name instanceof TestAbstract) {
+			$name = $name->name;
+		}
+
 		if (isset($this->includedTests[$name])) {
 			unset($this->includedTests[$name]);
 		}
