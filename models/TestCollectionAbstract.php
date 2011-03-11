@@ -25,6 +25,8 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
 	 */
 	protected $scope = 'all';
 
+	private $scopeCache = array();
+
 	/**
 	 * You can set the scope by calling $object->scopename()
 	 * set the first parameter true to return cloned object(to use both scopes)
@@ -92,6 +94,12 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
 			throw new Exception('Scope class ' . get_class($scope) . ' does not extend ScopeAbstract.');
 		}
 		$this->scope = $scope;
+		$this->clearScopeCache();
+	}
+
+	protected function clearScopeCache()
+	{
+		$this->scopeCache = array();
 	}
 
 	/**
@@ -102,14 +110,12 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
 	 */
 	protected function matchesScope(TestAbstract $test)
 	{
-		static $scopeCache = array();
-
 		$name = $test->name;
-		if (!isset($scopeCache[$name])) {
-			$scopeCache[$name] = $this->scope->matches($test);
+		if (!isset($this->scopeCache[$name])) {
+			$this->scopeCache[$name] = $this->scope->matches($test);
 		}
 
-		return $scopeCache[$name];
+		return $this->scopeCache[$name];
 	}
 
 	/**
