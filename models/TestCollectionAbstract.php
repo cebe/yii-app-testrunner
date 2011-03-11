@@ -116,6 +116,14 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
 	}
 
 	/**
+	 * Reorder tests by using the function lowerEqual to get the right order
+	 *
+	 * @param callback $lowerEqual function(TestAbstract $testA, TestAbstract $testB) { return true|false; }
+	 * @return void
+	 */
+	abstract public function orderTests($lowerEqual);
+
+	/**
 	 *
 	 */
 	public function applyScope($scope)
@@ -149,14 +157,6 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
 
 		return $this->scopeCache[$name];
 	}
-
-	/**
-	 * Reorder tests by using the function lowerEqual to get the right order
-	 *
-	 * @param callback $lowerEqual function(TestAbstract $testA, TestAbstract $testB) { return true|false; }
-	 * @return void
-	 */
-	abstract public function orderTests($lowerEqual);
 
 	/**
 	 *
