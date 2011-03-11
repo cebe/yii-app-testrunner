@@ -119,6 +119,14 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
 	}
 
 	/**
+	 * Reorder tests by using the function lowerEqual to get the right order
+	 *
+	 * @param callback $lowerEqual function(TestAbstract $testA, TestAbstract $testB) { return true|false; }
+	 * @return void
+	 */
+	abstract public function orderTests($lowerEqual);
+
+	/**
 	 *
 	 */
 	public function __construct()
