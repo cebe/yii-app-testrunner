@@ -12,7 +12,14 @@ class TestCollection extends TestCollectionAbstract
 {
 	public function orderTests($lowerEqual)
 	{
+		// work around the xdebug.max_nesting_level (default is 100) to work with deep recursion
+		$xedebugNesting = ini_get('xdebug.max_nesting_level');
+		ini_set('xdebug.max_nesting_level', count($this->tests) + $xedebugNesting);
+
 		$this->tests = $this->quickSort($lowerEqual, $this->tests);
+
+		ini_set('xdebug.max_nesting_level', $xedebugNesting);
+
 		$this->rewind();
 	}
 
