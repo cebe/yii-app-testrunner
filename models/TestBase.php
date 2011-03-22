@@ -70,6 +70,15 @@ class TestBase extends TestAbstract
 	 */
 	public function run()
 	{
+		if ($this->getError() ||
+			$this->getFailed() ||
+			$this->getSkipped() ||
+			$this->getIncomplete() ||
+			$this->getPassed())
+		{
+			return $this->getPassed(); // @todo: think about senselessness
+		}
+
 		// dependencies are handled by own behavior
 		$this->testClass->setDependencies(array());
 
