@@ -73,5 +73,10 @@ class TestOutputPhpUnitStyleBehavior extends TestRunnerBehaviorAbstract
 				     $failure['message']  . "\n";
 			}
 		}
+		if (empty($errors) AND empty($failures)) {
+			exit(0);
+		} else {
+			exit(1);
+		}
 	}
 }

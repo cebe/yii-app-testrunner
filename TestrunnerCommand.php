@@ -210,10 +210,7 @@ EOF;
 		$runner->collection = $collection;
 		$runner->run();
 
-
-
-		$this->p("finished.\n");
-		$this->p("summary: (coming soon ;-) )\n");
+		exit(0);
 	}
 
 	/**
