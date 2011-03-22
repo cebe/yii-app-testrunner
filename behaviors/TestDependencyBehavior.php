@@ -105,28 +105,71 @@ class TestDependencyBehavior extends TestRunnerBehaviorAbstract
 	{
 		if (count($depends = static::getDependencies($test))) {
 			foreach($depends as $dependency) {echo '.';
-				if (!count($dependsOnTests = $collection->getTestsByName($dependency))) {
+				if (!count($depProducers = $collection->getTestsByName($dependency))) {
 					throw new Exception('Test "' . $dependency . '" does not exist, but "' . $test->name . '" depends on it.');
+				}
+				// add relations
+				foreach($depProducers as $producer) {
+					$this->addProducerRelation($test, $producer);
+					$this->addConsumerRelation($producer, $test);
 				}
 				// activate tests
 				if ($this->autoEnableTests) {
-					foreach($dependsOnTests as $dpTest) {
-						if (!$collection->isIncluded($dpTest)) {
+					foreach($depProducers as $producer) {
+						if (!$collection->isIncluded($producer)) {
 							// producer is not included, enable it
-							$collection->includeTest($dpTest);
+							$collection->includeTest($producer);
 							// resolve dependencies of the producer
-							$this->resolveTestDependencies($dpTest, $collection);
+							$this->resolveTestDependencies($producer, $collection);
 						}
 					}
 				} else {
-					foreach($dependsOnTests as $dpTest) {
-						if (!$collection->isIncluded($dpTest)) {
+					foreach($depProducers as $producer) {
+						if (!$collection->isIncluded($producer)) {
 							// producer is not included, disable myself
 							$collection->excludeTest($test);
 						}
 					}
 				}
 			}
+		}
+	}
+
+	/**
+	 * add a relation to a producer to a test
+	 *
+	 * @param TestAbstract $test
+	 * @param TestAbstract $producer
+	 * @return void
+	 */
+	protected function addProducerRelation($test, $producer)
+	{
+		if ($test->hasAttribute('dependsProducers')) {
+			$test->dependsProducers = array_merge(
+				$test->dependsProducers,
+				array($producer->name => $producer)
+			);
+		} else {
+			$test->setAttribute('dependsProducers', array($producer->name => $producer));
+		}
+	}
+
+	/**
+	 * add a relation to a consumer to a test
+	 *
+	 * @param TestAbstract $test
+	 * @param TestAbstract $consumer
+	 * @return void
+	 */
+	protected function addConsumerRelation($test, $consumer)
+	{
+		if ($test->hasAttribute('dependsConsumer')) {
+			$test->dependsConsumer = array_merge(
+				$test->dependsConsumer,
+				array($consumer->name => $consumer)
+			);
+		} else {
+			$test->setAttribute('dependsConsumer', array($consumer->name => $consumer));
 		}
 	}
 }
