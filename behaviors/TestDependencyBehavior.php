@@ -61,6 +61,41 @@ class TestDependencyBehavior extends TestRunnerBehaviorAbstract
 	}
 
 	/**
+	 * Called before every single test run
+	 *
+	 * @param TestRunnerEvent the raised event holding the current testcollection and the test that will be run
+	 * @return void
+	 */
+	public function beforeTest(TestRunnerEvent $event)
+	{
+		if ($event->currentTest->hasAttribute('dependsInput')) {
+			$event->currentTest->testClass->setDependencyInput($event->currentTest->dependsInput);
+		}
+	}
+
+	/**
+	 * Called after every single test run
+	 *
+	 * @param TestRunnerEvent the raised event holding the current testcollection and the test that has been run
+	 * @return void
+	 */
+	public function afterTest(TestRunnerEvent $event)
+	{
+		if ($event->currentTest->hasAttribute('dependsConsumer')) {
+			foreach($event->currentTest->dependsConsumer as $consumer)
+			{
+				$result = $event->currentTest->testClass->getResult();
+
+				if ($consumer->hasAttribute('dependsInput')) {
+					$consumer->dependsInput = array_merge($consumer->dependsInput, array($result));
+				} else {
+					$consumer->setAttribute('dependsInput', array($result));
+				}
+			}
+		}
+	}
+
+	/**
 	 * return array of dependend tests
 	 *
 	 * @param TestAbstract $test
@@ -86,6 +121,7 @@ class TestDependencyBehavior extends TestRunnerBehaviorAbstract
 	{
 		foreach($collection as $test)
 		{
+			$test->attachBehavior('TestDependencyTestBehavior', new TestDependencyTestBehavior);
 			$this->resolveTestDependencies($test, $collection);
 		}
 
