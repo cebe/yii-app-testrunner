@@ -44,6 +44,8 @@ class TestOutputPhpUnitStyleBehavior extends TestRunnerBehaviorAbstract
 		$longestErrorName = 0;
 		$failures = array();
 		$longestFailureName = 0;
+		$skipped = array();
+		$longestSkippedName = 0;
 		foreach($event->collection as $test)
 		{
 			switch(true)
@@ -60,29 +62,36 @@ class TestOutputPhpUnitStyleBehavior extends TestRunnerBehaviorAbstract
 						$longestFailureName = strlen($test->name);
 					}
 				break;
-			}
-		}
-		if (!empty($errors)) {
-			echo "\n\nErrors: \n\n";
-			foreach($errors as $error) {
-				echo $error['test'] . ':' .
-				     str_repeat(' ', $longestErrorName + 2 - strlen($error['test'])) .
-				     $error['message']  . "\n";
+				case $test->skipped:
+					$skipped[] = array('test' => $test->name, 'message' => $test->skippedMessage);
+					if ($longestSkippedName < strlen($test->name)) {
+						$longestSkippedName = strlen($test->name);
+					}
+				break;
 			}
 		}
 
-		if (!empty($failures)) {
-			echo "\n\nFailures: \n\n";
-			foreach($failures as $failure) {
-				echo $failure['test'] . ':' .
-				     str_repeat(' ', $longestFailureName + 2 - strlen($failure['test'])) .
-				     $failure['message']  . "\n";
-			}
-		}
+		$this->listResults('Errors', $errors, $longestErrorName);
+		$this->listResults('Failures', $failures, $longestFailureName);
+		$this->listResults('Skipped', $skipped, $longestSkippedName);
+
 		if (empty($errors) AND empty($failures)) {
 			exit(0);
 		} else {
 			exit(1);
 		}
+	}
+
+	public function listResults($type, $results, $longest)
+	{
+		if (!empty($results)) {
+			echo "\n\n$type: \n\n";
+			foreach($results as $result) {
+				echo $result['test'] . ':' .
+				     str_repeat(' ', $longest + 2 - strlen($result['test'])) .
+				     str_replace("\n", "\n" . str_repeat(' ', $longest + 3), $result['message'])  . "\n";
+			}
+		}
+
 	}
 }

@@ -102,7 +102,7 @@ class TestBase extends TestAbstract
 			foreach($this->results->errors() as $error) {
 				$message .= $error->getExceptionAsString() . "\n";
 			}
-			$this->markError($message);
+			$this->markError(trim($message));
 		}
 		elseif (count($this->results->failures()) > 0)
 		{
@@ -110,7 +110,7 @@ class TestBase extends TestAbstract
 			foreach($this->results->failures() as $failure) {
 				$message .= $failure->getExceptionAsString() . "\n";
 			}
-			$this->markFailed($message);
+			$this->markFailed(trim($message));
 		}
 		elseif (count($this->results->skipped()) > 0)
 		{
@@ -118,7 +118,7 @@ class TestBase extends TestAbstract
 			foreach($this->results->skipped() as $skip) {
 				$message .= $skip->getExceptionAsString() . "\n";
 			}
-			$this->markSkipped($message);
+			$this->markSkipped(trim($message));
 		}
 		elseif (count($this->results->notImplemented()) > 0)
 		{
@@ -126,7 +126,7 @@ class TestBase extends TestAbstract
 			foreach($this->results->notImplemented() as $incomplete) {
 				$message .= $incomplete->getExceptionAsString() . "\n";
 			}
-			$this->markIncomplete($message);
+			$this->markIncomplete(trim($message));
 		}
 		elseif (count($this->results->passed()) > 0) {
 			$this->markPassed();
