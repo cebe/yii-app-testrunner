@@ -3,6 +3,8 @@
 /**
  * @author Carsten Brandt <mail@cebe.cc>
  * @package Tests
+ *
+ * @property-read string name
  */
 abstract class TestAbstract extends CComponent
 {

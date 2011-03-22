@@ -23,7 +23,7 @@ class TestDependencyBehavior extends TestRunnerBehaviorAbstract
 	 * @param TestRunnerEvent the raised event holding the current testcollection
 	 * @return void
 	 */
-	public function beforeRun($event)
+	public function beforeRun(TestRunnerEvent $event)
 	{
 		$collection = $event->collection;
 
@@ -38,15 +38,25 @@ class TestDependencyBehavior extends TestRunnerBehaviorAbstract
 		echo " done.\n";
 
 		echo "reordering tests by dependency...";
-		$collection->orderTests(function($testA, $testB) {
 
-			// if A is in the dependecies of B it must be run before B, so it's lower-equal
-			if (in_array($testA->name, TestDependencyBehavior::getDependencies($testB))) {
-				return true;
+		$collection->orderTests(
+			/**
+			 * the lower-equal-function for re-ordering tests
+			 *
+			 * @param TestAbstract a test
+			 * @param TestAbstract the compared test
+			 * @return boolean
+			 */
+			function($testA, $testB) {
+
+				// if A is in the dependecies of B it must be run before B, so it's lower-equal
+				if (in_array($testA->name, TestDependencyBehavior::getDependencies($testB))) {
+					return true;
+				}
+				// otherwise run it after B, just in case B is dependend on A
+				return false;
 			}
-			// otherwise run it after B, just in case B is dependend on A
-			return false;
-		});
+		);
 		echo " done.\n";
 	}
 

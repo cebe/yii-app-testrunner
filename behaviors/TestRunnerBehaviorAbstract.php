@@ -28,7 +28,7 @@ abstract class TestRunnerBehaviorAbstract extends CBehavior
 	 * @param TestRunnerEvent the raised event holding the current testcollection
 	 * @return void
 	 */
-	public function beforeRun($event)
+	public function beforeRun(TestRunnerEvent $event)
 	{
 
 	}
@@ -39,7 +39,7 @@ abstract class TestRunnerBehaviorAbstract extends CBehavior
 	 * @param TestRunnerEvent the raised event holding the current testcollection and the test that will be run
 	 * @return void
 	 */
-	public function beforeTest($event)
+	public function beforeTest(TestRunnerEvent $event)
 	{
 
 	}
@@ -50,7 +50,7 @@ abstract class TestRunnerBehaviorAbstract extends CBehavior
 	 * @param TestRunnerEvent the raised event holding the current testcollection and the test that has been run
 	 * @return void
 	 */
-	public function afterTest($event)
+	public function afterTest(TestRunnerEvent $event)
 	{
 
 	}
@@ -61,7 +61,7 @@ abstract class TestRunnerBehaviorAbstract extends CBehavior
 	 * @param TestRunnerEvent the raised event holding the current testcollection
 	 * @return void
 	 */
-	public function afterRun($event)
+	public function afterRun(TestRunnerEvent $event)
 	{
 
 	}

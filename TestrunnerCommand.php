@@ -62,6 +62,7 @@ class TestrunnerCommand extends CConsoleCommand
 			$this
 		);
 	}
+
 	/**
 	 *
 	 * @return TestRunner
