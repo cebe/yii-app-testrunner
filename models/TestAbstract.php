@@ -185,6 +185,20 @@ abstract class TestAbstract extends CComponent
 	 */
 	abstract public function run();
 
+	/**
+	 * reset current state to "not run"
+	 *
+	 * @param string $exclude
+	 * @return void
+	 */
+	protected function resetState($exclude='')
+	{
+		$exclude == 'error'      OR $this->_error = false;
+		$exclude == 'failed'     OR $this->_failed = false;
+		$exclude == 'skipped'    OR $this->_skipped = false;
+		$exclude == 'incomplete' OR $this->_incomplete = false;
+		$exclude == 'passed'     OR $this->_passed = false;
+	}
 
 	/**
 	 * mark this test as "failed due to an error"
@@ -194,7 +208,26 @@ abstract class TestAbstract extends CComponent
 	 */
 	public function markError($message = 'Test failed due to an error.')
 	{
+		$message = $this->onMarkError($message);
 		$this->_error = ($message === false OR is_string($message)) ? $message : '';
+	}
+
+	/**
+	 * Event that is raised when a test is marked "failed due to an error"
+	 *
+	 * message can be accessed over $event->message
+	 *
+	 * @return void
+	 */
+	public function onMarkError($message)
+	{
+		$event = new TestEvent($this, $message);
+		$this->raiseEvent('onMarkError', $event);
+
+		if ($event->resetState) {
+			$this->resetState('error');
+		}
+		return $event->message;
 	}
 
 	/**
@@ -228,7 +261,27 @@ abstract class TestAbstract extends CComponent
 	 */
 	public function markFailed($message = 'Test failed.')
 	{
+		$message = $this->onMarkFailed($message);
 		$this->_failed = ($message === false OR is_string($message)) ? $message : '';
+	}
+
+	/**
+	 * Event that is raised when a test is marked "failed"
+	 *
+	 * message can be accessed over $event->message
+	 *
+	 * @return void
+	 */
+	public function onMarkFailed($message)
+	{
+		$event = new TestEvent($this, $message);
+		$this->raiseEvent('onMarkFailed', $event);
+
+		if ($event->resetState) {
+			$this->resetState('failed');
+		}
+
+		return $event->message;
 	}
 
 	/**
@@ -262,7 +315,27 @@ abstract class TestAbstract extends CComponent
 	 */
 	public function markSkipped($message = 'Test has been skipped.')
 	{
+		$message = $this->onMarkSkipped($message);
 		$this->_skipped = ($message === false OR is_string($message)) ? $message : '';
+	}
+
+	/**
+	 * Event that is raised when a test is marked "skipped"
+	 *
+	 * message can be accessed over $event->message
+	 *
+	 * @return void
+	 */
+	public function onMarkSkipped($message)
+	{
+		$event = new TestEvent($this, $message);
+		$this->raiseEvent('onMarkSkipped', $event);
+
+		if ($event->resetState) {
+			$this->resetState('skipped');
+		}
+
+		return $event->message;
 	}
 
 	/**
@@ -294,9 +367,29 @@ abstract class TestAbstract extends CComponent
 	 * @param string|boolean $message
 	 * @return void
 	 */
-	public function markIncomplete($message = 'Test has been skipped.')
+	public function markIncomplete($message = 'Test is incomplete.')
 	{
+		$message = $this->onMarkIncomplete($message);
 		$this->_incomplete = ($message === false OR is_string($message)) ? $message : '';
+	}
+
+	/**
+	 * Event that is raised when a test is marked "incomplete"
+	 *
+	 * message can be accessed over $event->message
+	 *
+	 * @return void
+	 */
+	public function onMarkIncomplete($message)
+	{
+		$event = new TestEvent($this, $message);
+		$this->raiseEvent('onMarkIncomplete', $event);
+
+		if ($event->resetState) {
+			$this->resetState('incomplete');
+		}
+
+		return $event->message;
 	}
 
 	/**
@@ -329,7 +422,27 @@ abstract class TestAbstract extends CComponent
 	 */
 	public function markPassed()
 	{
-		$this->_passed = true;
+		$result = $this->onMarkPassed(true) ? true : false;
+		$this->_passed = $result;
+	}
+
+	/**
+	 * Event that is raised when a test is marked "passed"
+	 *
+	 * passed value (true|false) can be accessed over $event->message
+	 *
+	 * @return void
+	 */
+	public function onMarkPassed($message)
+	{
+		$event = new TestEvent($this, $message);
+		$this->raiseEvent('onMarkPassed', $event);
+
+		if ($event->resetState) {
+			$this->resetState('passed');
+		}
+
+		return $event->message;
 	}
 
 	/**
@@ -342,3 +455,41 @@ abstract class TestAbstract extends CComponent
 		return ($this->_passed !== false);
 	}
 }
+
+
+/**
+ * Events that are raised from TestAbstract
+ *
+ * @author Carsten Brandt <mail@cebe.cc>
+ * @package Tests
+ */
+class TestEvent extends CEvent
+{
+	/**
+	 * The message related to a Mark-Event or null on other events
+	 *
+	 * @var null|boolean|string
+	 */
+	public $message = null;
+
+	/**
+	 * whether to reset state after Mark-Event is handled
+	 *
+	 * defaults to true
+	 *
+	 * @var boolean
+	 */
+	public $resetState = true;
+
+	/**
+	 *
+	 * @param TestAbstract $sender
+	 * @param string       $message
+	 */
+	public function __construct(TestAbstract $sender, $message=null)
+	{
+		$this->message = $message;
+		parent::__construct($sender);
+	}
+}
+
