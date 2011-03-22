@@ -26,6 +26,12 @@ class TestOutputPhpUnitStyleBehavior extends TestRunnerBehaviorAbstract
 			case $event->currentTest->failed:
 				echo $v ? 'failed' . "\n" : 'F';
 			break;
+			case $event->currentTest->skipped:
+				echo $v ? 'skipped' . "\n" : 'S';
+			break;
+			case $event->currentTest->incomplete:
+				echo $v ? 'incomplete' . "\n" : 'I';
+			break;
 			case $event->currentTest->passed:
 				echo $v ? 'ok' . "\n" : '.';
 			break;
