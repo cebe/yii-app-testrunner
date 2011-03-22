@@ -104,7 +104,11 @@ class TestDependencyBehavior extends TestRunnerBehaviorAbstract
 	public static function getDependencies(TestAbstract $test)
 	{
 		if (isset($test->depends)) {
-			$depends = explode(',', $test->depends);
+			if (is_array($test->depends)) {
+				$depends = $test->depends;
+			} else {
+				$depends = explode(',', $test->depends);
+			}
 
 			foreach($depends as &$dependency) {
 				$dependency = trim($dependency);

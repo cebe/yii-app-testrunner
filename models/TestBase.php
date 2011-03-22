@@ -46,7 +46,15 @@ class TestBase extends TestAbstract
 			if (!empty($line) AND $line{0} == '@') {
 				$key = substr($line, 1, strpos($line, ' ') - 1);
 				$value = substr($line, strpos($line, ' ') + 1);
-				$this->attributes[$key] = $value;
+
+				if (isset($this->attributes[$key]) AND !is_array($this->attributes[$key])) {
+					$this->attributes[$key] = array($this->attributes[$key]);
+				}
+				if(isset($this->attributes[$key]) AND is_array($this->attributes[$key])) {
+					$this->attributes[$key][] = trim($value);
+				} else {
+					$this->attributes[$key] = trim($value);
+				}
 			}
 		}
 	}
