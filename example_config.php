@@ -27,6 +27,9 @@ return array(
 				 * attach behaviors to testRunner class
 				 */
 				'behaviors'=>array(
+					'todos' => array(
+						'class' => 'application.commands.testRunner.behaviors.TestTodoDetectorBehavior'
+					),
 					'phpunitStyle' => array(
 						'class' => 'application.commands.testRunner.behaviors.TestOutputPhpUnitStyleBehavior',
 					),
