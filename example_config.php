@@ -27,6 +27,10 @@ return array(
 				 * attach behaviors to testRunner class
 				 */
 				'behaviors'=>array(
+					'junit' => array(
+						'class' => 'application.commands.testRunner.behaviors.TestLoggerJUnitBehavior',
+						//'logPath' => '...'
+					),
 					'todos' => array(
 						'class' => 'application.commands.testRunner.behaviors.TestTodoDetectorBehavior'
 					),
