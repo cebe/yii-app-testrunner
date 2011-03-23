@@ -97,7 +97,8 @@ class TestCodeCoverageBehavior extends TestRunnerBehaviorAbstract
 			    );
 
 			    // get base path
-			    if (is_null($this->cloverXmlPath)) {
+			    $reportPath = $this->cloverXmlPath;
+			    if (is_null($reportPath)) {
 				    $reportPath = Yii::getPathOfAlias($this->owner->command->testPath) . '/report';
 			    }
 			    if (!file_exists($reportPath)) {
@@ -121,7 +122,8 @@ class TestCodeCoverageBehavior extends TestRunnerBehaviorAbstract
 			    );
 
 			    // get base path
-			    if (is_null($this->coverageHtmlPath)) {
+			    $reportPath = $this->coverageHtmlPath;
+			    if (is_null($reportPath)) {
 				    $reportPath = Yii::getPathOfAlias($this->owner->command->testPath) . '/report/coverage';
 			    }
 			    if (!file_exists($reportPath)) {
