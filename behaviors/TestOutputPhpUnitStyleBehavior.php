@@ -7,6 +7,19 @@
  */
 class TestOutputPhpUnitStyleBehavior extends TestRunnerBehaviorAbstract
 {
+	/**
+	 * application exit code
+	 *
+	 * @var int
+	 */
+	protected $exitCode = 0;
+
+	/**
+	 * Called before every single test run
+	 *
+	 * @param TestRunnerEvent the raised event holding the current testcollection and the test that will be run
+	 * @return void
+	 */
 	public function beforeTest(TestRunnerEvent $event)
 	{
 		if ($this->owner->command->verbose > 1) {
@@ -14,6 +27,12 @@ class TestOutputPhpUnitStyleBehavior extends TestRunnerBehaviorAbstract
 		}
 	}
 
+	/**
+	 * Called after every single test run
+	 *
+	 * @param TestRunnerEvent the raised event holding the current testcollection and the test that has been run
+	 * @return void
+	 */
 	public function afterTest(TestRunnerEvent $event)
 	{
 		$v = ($this->owner->command->verbose > 1);
@@ -38,6 +57,12 @@ class TestOutputPhpUnitStyleBehavior extends TestRunnerBehaviorAbstract
 		}
 	}
 
+	/**
+	 * Called after running a test sequence
+	 *
+	 * @param TestRunnerEvent the raised event holding the current testcollection
+	 * @return void
+	 */
 	public function afterRun(TestRunnerEvent $event)
 	{
 		$errors = array();
@@ -76,12 +101,31 @@ class TestOutputPhpUnitStyleBehavior extends TestRunnerBehaviorAbstract
 		$this->listResults('Skipped', $skipped, $longestSkippedName);
 
 		if (empty($errors) AND empty($failures)) {
-			exit(0);
+			$this->exitCode = 0;
 		} else {
-			exit(1);
+			$this->exitCode = 1;
 		}
 	}
 
+	/**
+	 * Called after running a test sequence
+	 *
+	 * @param TestRunnerEvent the raised event holding the current testcollection
+	 * @return void
+	 */
+	public function handleExit(TestRunnerEvent $event)
+	{
+		exit($this->exitCode);
+	}
+
+	/**
+	 * prints output for a list of tests
+	 *
+	 * @param  $type
+	 * @param  $results
+	 * @param  $longest
+	 * @return void
+	 */
 	public function listResults($type, $results, $longest)
 	{
 		if (!empty($results)) {
