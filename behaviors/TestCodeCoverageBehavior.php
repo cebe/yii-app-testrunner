@@ -10,6 +10,52 @@
 class TestCodeCoverageBehavior extends TestRunnerBehaviorAbstract
 {
 	/**
+	 * whether to report clover xml
+	 *
+	 * @var bool
+	 */
+	public $cloverXml = false;
+
+	/**
+	 * report path for clover xml
+	 *
+	 * defaults to null means report to default path
+	 *
+	 * @var string|null
+	 */
+	public $cloverXmlPath = null;
+
+	/**
+	 * file for clover xml
+	 *
+	 * @var bool
+	 */
+	public $cloverXmlFile = 'clover.xml';
+
+	/**
+	 * whether to report coverage html
+	 *
+	 * @var bool
+	 */
+	public $coverageHtml = false;
+
+	/**
+	 * whether to report coverage html
+	 *
+	 * @var array
+	 */
+	public $coverageHtmlConfig = array();
+
+	/**
+	 * report path for clover xml
+	 *
+	 * defaults to null means report to default path
+	 *
+	 * @var string|null
+	 */
+	public $coverageHtmlPath = null;
+
+	/**
 	 * Called before every single test run
 	 *
 	 * @param TestRunnerEvent the raised event holding the current testcollection and the test that will be run
@@ -29,13 +75,8 @@ class TestCodeCoverageBehavior extends TestRunnerBehaviorAbstract
 	 */
 	public function afterTest(TestRunnerEvent $event)
 	{
-
+		// @todo: implement remote code coverage here
 	}
-
-
-
-
-
 
 	/**
 	 * Called after running a test sequence
@@ -47,68 +88,63 @@ class TestCodeCoverageBehavior extends TestRunnerBehaviorAbstract
 	{
 		$coverage = PHP_CodeCoverage::getInstance();
 
-		//print_r($coverage->getSummary());
-
 		if (extension_loaded('tokenizer') && extension_loaded('xdebug'))
 		{
-			$reportPath = Yii::getPathOfAlias($this->owner->command->testPath) . '/report';
-
-			if (!file_exists($reportPath)) {
-				mkdir($reportPath, 0775, true);
-			}
-
-		    if (true)//isset($arguments['coverageClover']))
+		    if ($this->cloverXml)
 		    {
-		        $this->owner->command->p(
-		          "\nWriting code coverage data to XML file, this may take a moment."
-		        );
+			    $this->owner->command->p(
+			      "\nWriting code coverage data to XML file, this may take a moment."
+			    );
 
+			    // get base path
+			    if (is_null($this->cloverXmlPath)) {
+				    $reportPath = Yii::getPathOfAlias($this->owner->command->testPath) . '/report';
+			    }
+			    if (!file_exists($reportPath)) {
+				    mkdir($reportPath, 0775, true);
+			    }
+
+			    // include report generator
 		        require_once 'PHP/CodeCoverage/Report/Clover.php';
 
 		        $writer = new PHP_CodeCoverage_Report_Clover;
-		        $writer->process($coverage, $reportPath . '/clover.xml');
+		        $writer->process($coverage, $reportPath . DIRECTORY_SEPARATOR . $this->cloverXmlFile);
 
 		        $this->owner->command->p("\n");
 		        unset($writer);
 		    }
 
-		    if (true)//isset($arguments['reportDirectory']))
+		    if ($this->coverageHtml)
 		    {
-			    if (!file_exists($reportPath . '/coverage')) {
-				    mkdir($reportPath . '/coverage', 0775, true);
+			    $this->owner->command->p(
+			      "\nGenerating code coverage report, this may take a moment."
+			    );
+
+			    // get base path
+			    if (is_null($this->coverageHtmlPath)) {
+				    $reportPath = Yii::getPathOfAlias($this->owner->command->testPath) . '/report/coverage';
+			    }
+			    if (!file_exists($reportPath)) {
+				    mkdir($reportPath, 0775, true);
 			    }
 
-		        $this->owner->command->p(
-		          "\nGenerating code coverage report, this may take a moment."
-		        );
-
-		        $title = '';
-
-		        if (isset($arguments['configuration'])) {
-		            $loggingConfiguration = $arguments['configuration']->getLoggingConfiguration();
-
-		            if (isset($loggingConfiguration['title'])) {
-		                $title = $loggingConfiguration['title'];
-		            }
-		        }
+			    $this->coverageHtmlConfig = array_merge(
+				    $this->coverageHtmlConfig,
+					array(
+						'title'          => 'Unit Test Code Coverage HTML',
+						'charset'        => 'UTF-8',
+						'yui'            => true,
+						'highlight'      => false,
+						'lowUpperBound'  => 35,
+						'highLowerBound' => 70,
+						'generator'      => ' and Yii app-testrunner using PHPUnit ' . PHPUnit_Runner_Version::id()
+				    )
+			    );
 
 		        require_once 'PHP/CodeCoverage/Report/HTML.php';
 
-		        $writer = new PHP_CodeCoverage_Report_HTML(
-		          array(
-		            'title'          => 'code coverage',//$title,
-		            'charset'        => 'UTF-8',//$arguments['reportCharset'],
-/*		            'yui'            => $arguments['reportYUI'],
-		            'highlight'      => $arguments['reportHighlight'],
-		            'lowUpperBound'  => $arguments['reportLowUpperBound'],
-		            'highLowerBound' => $arguments['reportHighLowerBound'],*/
-		            'generator'      => ' and PHPUnit ' . PHPUnit_Runner_Version::id()
-		          )
-		        );
-
-		        $writer->process(
-		          $coverage, $reportPath . '/coverage'
-		        );
+		        $writer = new PHP_CodeCoverage_Report_HTML($this->coverageHtmlConfig);
+		        $writer->process($coverage, $reportPath);
 
 		        $this->owner->command->p("\n");
 		        unset($writer);
