@@ -124,6 +124,8 @@ HELP
 
 		--quiet         like --verbose=0
 
+		--coverage      collect coverage information
+
 /** standalone only **/
 
 		--includePath   comma seperated list of paths to add to include_path
@@ -159,7 +161,7 @@ EOF;
 	 *
 	 * @return void
 	 */
-	public function actionRunTests($path='', $bootstrap='', $scope='all', $verbose=1, $quiet=false)
+	public function actionRunTests($path='', $bootstrap='', $scope='all', $verbose=1, $quiet=false, $coverage=false)
 	{
 		$this->handleVerbosity($verbose, $quiet);
 
