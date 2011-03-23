@@ -91,6 +91,18 @@ abstract class TestRunnerAbstract extends CApplicationComponent
 	{
 		$this->raiseEvent('onAfterRun', new TestRunnerEvent($this, $this->collection));
 	}
+
+	/**
+	 * Event that is raised just before the application exits
+	 *
+	 * allows you to implement own exit codes
+	 *
+	 * @return void
+	 */
+	public function onExit()
+	{
+		$this->raiseEvent('onExit', new TestRunnerEvent($this, $this->collection));
+	}
 }
 
 /**

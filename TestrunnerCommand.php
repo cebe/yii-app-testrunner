@@ -211,6 +211,8 @@ EOF;
 		$runner->collection = $collection;
 		$runner->run();
 
+		// raise event
+		$runner->onExit();
 		exit(0);
 	}
 

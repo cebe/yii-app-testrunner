@@ -19,6 +19,7 @@ abstract class TestRunnerBehaviorAbstract extends CBehavior
 			'onBeforeTest' => 'beforeTest',
 			'onAfterTest' => 'afterTest',
 			'onAfterRun' => 'afterRun',
+			'onExit' => 'handleExit',
 		);
 	}
 
@@ -62,6 +63,17 @@ abstract class TestRunnerBehaviorAbstract extends CBehavior
 	 * @return void
 	 */
 	public function afterRun(TestRunnerEvent $event)
+	{
+
+	}
+
+	/**
+	 * Called after running a test sequence
+	 *
+	 * @param TestRunnerEvent the raised event holding the current testcollection
+	 * @return void
+	 */
+	public function handleExit(TestRunnerEvent $event)
 	{
 
 	}
