@@ -61,6 +61,11 @@ class TestBase extends TestAbstract
 				$key = substr($line, 1, strpos($line, ' ') - 1);
 				$value = substr($line, strpos($line, ' ') + 1);
 
+				if (in_array($key, array('error', 'failed', 'skipped', 'incomplete'))) {
+					$function = 'mark' . ucfirst($key);
+					$this->$function($value);
+				}
+
 				if (isset($this->attributes[$key]) AND !is_array($this->attributes[$key])) {
 					$this->attributes[$key] = array($this->attributes[$key]);
 				}
