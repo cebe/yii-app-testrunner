@@ -4,6 +4,7 @@
  * @author Carsten Brandt <mail@cebe.cc>
  * @package Tests
  *
+ * @property-read PHPUnit_Framework_TestResult results
  */
 class TestBase extends TestAbstract
 {
@@ -17,7 +18,20 @@ class TestBase extends TestAbstract
 	 *
 	 * @var PHPUnit_Framework_TestResult
 	 */
-	public $results = null;
+	private $_results = null;
+
+	/**
+	 *
+	 * @return void
+	 */
+	public function getResults()
+	{
+		if (is_null($this->_results)) {
+			$this->_results = new PHPUnit_Framework_TestResult(null);
+		}
+
+		return $this->_results;
+	}
 
 	/**
 	 * initialize the test object
@@ -90,18 +104,11 @@ class TestBase extends TestAbstract
 		// dependencies are handled by own behavior
 		$this->testClass->setDependencies(array());
 
-		// @todo: implement code coverage here
-		$codeCoverage = null;
-
-		$result = new PHPUnit_Framework_TestResult($codeCoverage);
-
-		$this->testClass->setDependencyInput(array('bla'));
+		//$this->testClass->setDependencyInput(array('bla'));
 		// will call testMethod with arguments: array_merge($this->data, $this->dependencyInput)
 		// setDependencyInput
 		// data and dataName are set to array() on testCase object creation
-		$this->testClass->run($result);
-
-		$this->results = $result;
+		$this->testClass->run($this->results);
 
 		// evaluate results
 		if (count($this->results->errors()) > 0)
