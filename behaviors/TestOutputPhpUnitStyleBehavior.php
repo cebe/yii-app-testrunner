@@ -65,40 +65,52 @@ class TestOutputPhpUnitStyleBehavior extends TestRunnerBehaviorAbstract
 	 */
 	public function afterRun(TestRunnerEvent $event)
 	{
+		$countAll = 0;
+		$countError = 0;
+		$countFailed = 0;
+		$countSkipped = 0;
+		$countIncomplete = 0;
+		$countPassed = 0;
+
 		$errors = array();
-		$longestErrorName = 0;
 		$failures = array();
-		$longestFailureName = 0;
 		$skipped = array();
-		$longestSkippedName = 0;
 		foreach($event->collection as $test)
 		{
+			++$countAll;
 			switch(true)
 			{
 				case $test->error:
-					$errors[] = array('test' => $test->name, 'message' => $test->errorMessage);
-					if ($longestErrorName < strlen($test->name)) {
-						$longestErrorName = strlen($test->name);
-					}
+					$errors[$test->name] = $test->errorMessage;
+					++$countError;
 				break;
 				case $test->failed:
-					$failures[] = array('test' => $test->name, 'message' => $test->failureMessage);
-					if ($longestFailureName < strlen($test->name)) {
-						$longestFailureName = strlen($test->name);
-					}
+					$failures[$test->name] = $test->failureMessage;
+					++$countFailed;
 				break;
 				case $test->skipped:
-					$skipped[] = array('test' => $test->name, 'message' => $test->skippedMessage);
-					if ($longestSkippedName < strlen($test->name)) {
-						$longestSkippedName = strlen($test->name);
-					}
+					$skipped[$test->name] = $test->skippedMessage;
+					++$countSkipped;
+				break;
+				case $test->incomplete:
+					++$countIncomplete;
+				break;
+				case $test->passed:
+					++$countPassed;
 				break;
 			}
 		}
 
-		$this->listResults('Errors', $errors, $longestErrorName);
-		$this->listResults('Failures', $failures, $longestFailureName);
-		$this->listResults('Skipped', $skipped, $longestSkippedName);
+		TestRunnerPrintHelper::listResults('Errors', $errors);
+		TestRunnerPrintHelper::listResults('Failures', $failures);
+		TestRunnerPrintHelper::listResults('Skipped', $skipped);
+
+		echo $countAll . ' Tests run' . "\n";
+		echo $countError . ' errors' . "\n";
+		echo $countFailed . ' failures' . "\n";
+		echo $countSkipped . ' skipped' . "\n";
+		echo $countIncomplete . ' incomplete' . "\n";
+		echo $countPassed . ' passed' . "\n";
 
 		if (empty($errors) AND empty($failures)) {
 			$this->exitCode = 0;
@@ -116,26 +128,5 @@ class TestOutputPhpUnitStyleBehavior extends TestRunnerBehaviorAbstract
 	public function handleExit(TestRunnerEvent $event)
 	{
 		exit($this->exitCode);
-	}
-
-	/**
-	 * prints output for a list of tests
-	 *
-	 * @param  $type
-	 * @param  $results
-	 * @param  $longest
-	 * @return void
-	 */
-	public function listResults($type, $results, $longest)
-	{
-		if (!empty($results)) {
-			echo "\n\n$type: \n\n";
-			foreach($results as $result) {
-				echo $result['test'] . ':' .
-				     str_repeat(' ', $longest + 2 - strlen($result['test'])) .
-				     str_replace("\n", "\n" . str_repeat(' ', $longest + 3), $result['message'])  . "\n";
-			}
-		}
-
 	}
 }
