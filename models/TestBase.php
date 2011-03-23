@@ -44,6 +44,7 @@ class TestBase extends TestAbstract
 
 		$this->docBlock = $this->testMethod->getDocComment();
 		$this->parseDocBlock();
+		$this->setAttribute('time', 0);
 	}
 
 	/**
@@ -154,6 +155,8 @@ class TestBase extends TestAbstract
 		else {
 			throw new Exception('Unable to determine tests result of ' . $this->getName());
 		}
+
+		$this->setAttribute('time', $this->results->time());
 
 		return $this->getPassed(); // @todo: think about senselessness
 	}
