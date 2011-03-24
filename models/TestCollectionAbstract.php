@@ -54,7 +54,7 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
 	}
 	*/
 
-	public function addTest($test)
+	public function addTest(TestAbstract $test)
 	{
 		$this->tests[$this->_nextIndex] = $test;
 		$this->nameIndexMap[$test->name][] = $this->_nextIndex;

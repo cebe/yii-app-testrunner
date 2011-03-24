@@ -5,7 +5,7 @@
  *
  * @package Behaviors
  */
-class TestOutputPhpUnitStyleBehavior extends TestRunnerBehaviorAbstract
+class TestDefaultOutputBehavior extends TestRunnerBehaviorAbstract
 {
 	/**
 	 * application exit code

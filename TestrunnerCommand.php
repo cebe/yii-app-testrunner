@@ -33,6 +33,15 @@ class TestrunnerCommand extends CConsoleCommand
 	);
 
 	/**
+	 * configuration for testRunner
+	 *
+	 * @var array
+	 */
+	public $testCollector = array(
+		'class' => 'TestCollector',
+	);
+
+	/**
 	 * Base Yii-alias for testRunnerCommand
 	 *
 	 * set this to the directory where you added the command to your application
@@ -61,6 +70,32 @@ class TestrunnerCommand extends CConsoleCommand
 			),
 			$this
 		);
+	}
+
+	/**
+	 *
+	 * @return TestCollector
+	 */
+	public function getTestCollector()
+	{
+		$config = $this->testCollector;
+
+		if (isset($config['class'])) {
+			$class = $config['class'];
+			unset($config['class']);
+		} else {
+			$class = 'TestCollector';
+		}
+
+		if (($pos = strripos($class, '.')) !== false) {
+			Yii::import($class);
+			$class = substr($class, $pos + 1);
+		}
+		$runner = new $class($this);
+		$runner->configure($config);
+		$runner->init();
+
+		return $runner;
 	}
 
 	/**
@@ -185,7 +220,7 @@ EOF;
 
 		$this->p("collecting tests...");
 
-		$testCollector = new TestCollector($this);
+		$testCollector = $this->getTestCollector();
 		$testCollector->setBasePath($testPath);
 		$collection = $testCollector->collectTests();
 

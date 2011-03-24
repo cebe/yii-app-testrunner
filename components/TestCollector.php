@@ -1,10 +1,12 @@
 <?php
 
 /**
+ * @todo create abstract class
+ *
  * @author Carsten Brandt <mail@cebe.cc>
  * @package TestCollector
  */
-class TestCollector extends CComponent
+class TestCollector extends TestComponentAbstract
 {
 	/**
 	 * base Path for tests
@@ -14,11 +16,21 @@ class TestCollector extends CComponent
 	private $_basePath = null;
 
 	/**
-	 * the correcsponding command
+	 * list of patterns which files to match
 	 *
-	 * @var TestrunnerCommand
+	 * pattern => description
+	 *
+	 * example: array('*Test.php' => 'phpunit');
+	 *
+	 * @var array
 	 */
-	public $command = null;
+	public $patterns = array();
+
+
+	public function registerPattern($pattern, $description)
+	{
+		$this->patterns[$pattern][] = $description;
+	}
 
 	/**
 	 * sets the base path for tests
@@ -46,11 +58,6 @@ class TestCollector extends CComponent
 		return $this->_basePath;
 	}
 
-	public function init()
-	{
-		// nothing
-	}
-
 	public function __construct($command=null)
 	{
 		$this->command = $command;
@@ -64,50 +71,89 @@ class TestCollector extends CComponent
 	 */
 	public function collectTests()
 	{
+		$this->onBeforeCollect();
+
 		$basePath = $this->getBasePath() . DIRECTORY_SEPARATOR;
 
-		$directories = glob($basePath . '*', GLOB_ONLYDIR);
-		$tests = glob($basePath . '*Test.php');
+		$tests = array();
 
-		for($i=0; $i < count($directories); ++$i)
+		// find all files
+		foreach($this->patterns as $pattern => $descriptions)
 		{
-			if (is_dir($directories[$i])) {
-				$subDirectories = glob($directories[$i] . DIRECTORY_SEPARATOR . '*');
-				$directories = array_merge($directories, $subDirectories);
-				$tests = array_merge($tests, glob($directories[$i] . DIRECTORY_SEPARATOR . '*Test.php'));
-			}
-		}
+			$directories = glob($basePath . '*', GLOB_ONLYDIR);
+			$tests = $this->globMergeTests($tests, $basePath . $pattern, $descriptions);
 
-		$collection = new TestCollection();
-		foreach($tests as $path)
-		{
-			$className = substr($path, strrpos($path, DIRECTORY_SEPARATOR) + 1, -4);
-
-			$this->command->p("\nincluding " . $path . '...', 3);
-			require_once($path);
-
-			if (!class_exists($className, false)) {
-				throw new Exception('File "' . $path .  '" did not define class "' . $className . '".');
-			}
-
-			$testClass = new $className;
-
-			$reflectionClass = new ReflectionClass($testClass);
-
-			foreach($reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-				if (substr($method->name, 0, 4) == 'test') {
-					$this->command->p("\n    " . $method->name, 3);
-					$collection->addTest(
-						new TestBase(
-							$method->name,
-							new $testClass($method->name, array(), ''),
-							$method->name
-						)
-					);
+			for($i=0; $i < count($directories); ++$i)
+			{
+				if (is_dir($directories[$i])) {
+					$subDirectories = glob($directories[$i] . DIRECTORY_SEPARATOR . '*');
+					$directories = array_merge($directories, $subDirectories);
+					$tests = $this->globMergeTests($tests, $directories[$i] . DIRECTORY_SEPARATOR . $pattern, $descriptions);
 				}
 			}
 		}
 
+		$collection = new TestCollection();
+		foreach($tests as $path => $descriptions)
+		{
+			$this->onFoundTest($path, $descriptions, $collection);
+		}
+
 		return $collection;
 	}
+
+	/**
+	 * find tests by glob pattern and add them to the array
+	 *
+	 * @return array
+	 */
+	public function globMergeTests($tests, $globPattern, $addDescriptions=array())
+	{
+		if (!is_array($addDescriptions)) {
+			$addDescriptions = array($addDescriptions);
+		}
+
+		$newTests = glob($globPattern);
+
+		foreach($newTests as $test)
+		{
+			if (isset($tests[$test])) {
+				$tests[$test] = array_merge($tests[$test], $addDescriptions);
+			} else {
+				$tests[$test] = $addDescriptions;
+			}
+		}
+
+		return $tests;
+	}
+
+	/**
+	 * Event that is raised before collecting tests
+	 *
+	 * you can add file patterns and
+	 *
+	 * @return void
+	 */
+	public function onBeforeCollect()
+	{
+		$this->raiseEvent('onBeforeCollect', new TestCollectorEvent($this));
+	}
+
+	/**
+	 * Event that is raised when a test is found
+	 *
+	 * you are given the collection, so you can call addTest() on it
+	 *
+	 * @return void
+	 */
+	public function onFoundTest($path, $descriptions, $collection)
+	{
+		$event = new TestCollectorEvent($this);
+		$event->testPath = $path;
+		$event->descriptions = $descriptions;
+		$event->collection = $collection;
+
+		$this->raiseEvent('onFoundTest', $event);
+	}
 }
+

@@ -1,5 +1,7 @@
 <?php
 
+require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'TestDependencyTestBehavior.php';
+
 /**
  * behavoir that handles test dependencies
  *

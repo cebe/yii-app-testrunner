@@ -20,19 +20,9 @@
 abstract class TestAbstract extends CComponent
 {
 	/**
-	 * @var null|PHPUnit_Framework_TestCase
+	 * @var string
 	 */
-	public $testClass = null;
-
-	/**
-	 * @var null|ReflectionClass
-	 */
-	public $reflectionClass = null;
-
-	/**
-	 * @var null|ReflectionMethod
-	 */
-	public $testMethod = null;
+	public $docBlock = '';
 
 
 	/**
@@ -95,23 +85,53 @@ abstract class TestAbstract extends CComponent
 	 */
 	public function init()
 	{
+		$reflectionThis = new ReflectionClass($this);
+		$this->docBlock .= $reflectionThis->getDocComment();
+		$this->parseDocBlock();
 
+		$this->setAttribute('time', 0);
+	}
+
+	/**
+	 * adds all values of docblock comments starting with @ to $this->attributes
+	 *
+	 * @return void
+	 */
+	protected function parseDocBlock()
+	{
+		$lines = explode("\n", $this->docBlock);
+		foreach($lines as $line)
+		{
+			$line = ltrim($line, " \t\n\r\0\x0B*");
+			if (!empty($line) AND $line{0} == '@') {
+				$key = substr($line, 1, strpos($line, ' ') - 1);
+				$value = substr($line, strpos($line, ' ') + 1);
+
+				if (in_array($key, array('error', 'failed', 'skipped', 'incomplete'))) {
+					$function = 'mark' . ucfirst($key);
+					$this->$function($value);
+				}
+
+				if (isset($this->attributes[$key]) AND !is_array($this->attributes[$key])) {
+					$this->attributes[$key] = array($this->attributes[$key]);
+				}
+				if(isset($this->attributes[$key]) AND is_array($this->attributes[$key])) {
+					$this->attributes[$key][] = trim($value);
+				} else {
+					$this->attributes[$key] = trim($value);
+				}
+			}
+		}
 	}
 
 	/**
 	 * create a new instance with name, testclass and method name
 	 *
 	 * @param  $name
-	 * @param  $testClass
-	 * @param  $testMethod
 	 */
-	public function __construct($name, $testClass, $testMethod)
+	public function __construct($name)
 	{
 		$this->_name = $name;
-		$this->testClass = $testClass;
-		$this->reflectionClass = new ReflectionClass($testClass);
-		$this->testMethod = $this->reflectionClass->getMethod($testMethod);
-
 		$this->init();
 	}
 

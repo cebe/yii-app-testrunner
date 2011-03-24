@@ -4,7 +4,7 @@
  * @author Carsten Brandt <mail@cebe.cc>
  * @package TestRunner
  */
-abstract class TestRunnerAbstract extends CApplicationComponent
+abstract class TestRunnerAbstract extends TestComponentAbstract
 {
 	/**
 	 * The TestCollection of test to be run
@@ -12,36 +12,6 @@ abstract class TestRunnerAbstract extends CApplicationComponent
 	 * @var TestCollectionAbstract|null
 	 */
 	public $collection = null;
-
-	/**
-	 * the correcsponding command
-	 *
-	 * @var TestrunnerCommand
-	 */
-	public $command = null;
-
-	/**
-	 *
-	 * @param null|TestrunnerCommand $command
-	 */
-	public function __construct($command=null)
-	{
-		$this->command = $command;
-	}
-
-	/**
-	 * Configures the class with the specified configuration.
-	 * @param array $config the configuration array
-	 */
-	public function configure($config)
-	{
-		if (is_array($config))
-		{
-			foreach($config as $key => $value) {
-				$this->$key = $value;
-			}
-		}
-	}
 
 	/**
 	 * run tests
@@ -102,42 +72,6 @@ abstract class TestRunnerAbstract extends CApplicationComponent
 	public function onExit()
 	{
 		$this->raiseEvent('onExit', new TestRunnerEvent($this, $this->collection));
-	}
-}
-
-/**
- * Events that are raised from TestRunner
- *
- * @author Carsten Brandt <mail@cebe.cc>
- * @package TestRunner
- */
-class TestRunnerEvent extends CEvent
-{
-	/**
-	 * the current collection beeing run
-	 *
-	 * @var TestCollection
-	 */
-	public $collection = null;
-
-	/**
-	 * The current test, null if none
-	 *
-	 * @var null|TestAbstract
-	 */
-	public $currentTest = null;
-
-	/**
-	 *
-	 * @param mixed $sender
-	 * @param TestCollection $collection
-	 * @param TestAbstract $currentTest
-	 */
-	public function __construct($sender=null, $collection=null, $currentTest=null)
-	{
-		$this->collection = $collection;
-		$this->currentTest = $currentTest;
-		parent::__construct($sender);
 	}
 }
 
