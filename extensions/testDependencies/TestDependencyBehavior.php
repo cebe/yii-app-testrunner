@@ -7,6 +7,8 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'TestDependencyTestBehavi
  *
  * run tests in
  *
+ * @todo make this work for tests like LiveTest
+ *
  * @package Behaviors
  */
 class TestDependencyBehavior extends TestRunnerBehaviorAbstract
@@ -71,7 +73,9 @@ class TestDependencyBehavior extends TestRunnerBehaviorAbstract
 	public function beforeTest(TestRunnerEvent $event)
 	{
 		if ($event->currentTest->hasAttribute('dependsInput')) {
-			$event->currentTest->testClass->setDependencyInput($event->currentTest->dependsInput);
+			if ($event->currentTest instanceof TestPHPUnit) {
+				$event->currentTest->testClass->setDependencyInput($event->currentTest->dependsInput);
+			}
 		}
 	}
 
@@ -86,12 +90,14 @@ class TestDependencyBehavior extends TestRunnerBehaviorAbstract
 		if ($event->currentTest->hasAttribute('dependsConsumer')) {
 			foreach($event->currentTest->dependsConsumer as $consumer)
 			{
-				$result = $event->currentTest->testClass->getResult();
+				if ($consumer instanceof TestPHPUnit) {
+					$result = $event->currentTest->testClass->getResult();
 
-				if ($consumer->hasAttribute('dependsInput')) {
-					$consumer->dependsInput = array_merge($consumer->dependsInput, array($result));
-				} else {
-					$consumer->setAttribute('dependsInput', array($result));
+					if ($consumer->hasAttribute('dependsInput')) {
+						$consumer->dependsInput = array_merge($consumer->dependsInput, array($result));
+					} else {
+						$consumer->setAttribute('dependsInput', array($result));
+					}
 				}
 			}
 		}

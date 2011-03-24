@@ -3,6 +3,8 @@
 /**
  * behavior for testrunner
  *
+ * @todo extend to support LiveTest and others
+ *
  * @package Behaviors
  */
 class TestLoggerJUnitBehavior extends TestRunnerBehaviorAbstract
@@ -54,7 +56,9 @@ class TestLoggerJUnitBehavior extends TestRunnerBehaviorAbstract
 	 */
 	public function beforeTest(TestRunnerEvent $event)
 	{
-		$this->logger->startTest($event->currentTest->testClass);
+		if ($event->currentTest instanceof TestPHPUnit) {
+			$this->logger->startTest($event->currentTest->testClass);
+		}
 	}
 
 	/**
@@ -65,7 +69,9 @@ class TestLoggerJUnitBehavior extends TestRunnerBehaviorAbstract
 	 */
 	public function afterTest(TestRunnerEvent $event)
 	{
-		$this->logger->endTest($event->currentTest->testClass, $event->currentTest->time);
+		if ($event->currentTest instanceof TestPHPUnit) {
+			$this->logger->endTest($event->currentTest->testClass, $event->currentTest->time);
+		}
 
 		//$this->logger->addError($event->currentTest->testClass, 'wtf', 0.12);
 	}
@@ -81,36 +87,4 @@ class TestLoggerJUnitBehavior extends TestRunnerBehaviorAbstract
 		$this->logger->endTestSuite($this->suite);
 		$this->logger->flushListeners();
 	}
-
-	/**
-	 * Called after running a test sequence
-	 *
-	 * @param TestRunnerEvent the raised event holding the current testcollection
-	 * @return void
-	 */
-	public function handleExit(TestRunnerEvent $event)
-	{
-
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

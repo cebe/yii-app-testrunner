@@ -63,8 +63,10 @@ class TestCodeCoverageBehavior extends TestRunnerBehaviorAbstract
 	 */
 	public function beforeTest(TestRunnerEvent $event)
 	{
-		$event->currentTest->results->collectCodeCoverageInformation(true);
-		//$event->currentTest->results->collectRawCodeCoverageInformation(true);
+		if ($event->currentTest instanceof TestPHPUnit) {
+			$event->currentTest->results->collectCodeCoverageInformation(true);
+			//$event->currentTest->results->collectRawCodeCoverageInformation(true);
+		}
 	}
 
 	/**
@@ -152,12 +154,6 @@ class TestCodeCoverageBehavior extends TestRunnerBehaviorAbstract
 		        unset($writer);
 		    }
 		}
-
-
-
-
-
-
 	}
 
 }
