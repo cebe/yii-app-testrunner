@@ -22,6 +22,6 @@ class ScopeFunctional extends ScopeAbstract
 	 */
 	public function matches($test)
 	{
-		return ($test->testClass instanceof PHPUnit_Extensions_SeleniumTestCase);
+		return (isset($test->testClass) AND $test->testClass instanceof PHPUnit_Extensions_SeleniumTestCase);
 	}
 }
