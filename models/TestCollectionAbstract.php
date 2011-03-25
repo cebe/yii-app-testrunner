@@ -237,6 +237,11 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
 
     public function next()
     {
+		// work around the xdebug.max_nesting_level (default is 100) to work with deep recursion
+		$xdebugNesting = ini_get('xdebug.max_nesting_level');
+		ini_set('xdebug.max_nesting_level', count($this->_nextIndex) + $xdebugNesting);
+
+
 	    ++$this->_position;
 	    // skip tests that do not match scope
 	    if (isset($this->tests[$this->_position]) AND
@@ -244,6 +249,9 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
 	    {
 		    $this->next();
 	    }
+
+
+	    ini_set('xdebug.max_nesting_level', $xdebugNesting);
     }
 
     public function valid()
