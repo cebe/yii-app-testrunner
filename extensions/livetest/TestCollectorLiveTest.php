@@ -9,6 +9,8 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'TestLiveTest.php';
  */
 class TestCollectorLiveTest extends TestCollectorBehaviorAbstract
 {
+	public $baseUrl = '';
+
 	/**
 	 * register eventhandlers
 	 *
@@ -57,6 +59,7 @@ class TestCollectorLiveTest extends TestCollectorBehaviorAbstract
 
 			if ($testClass instanceof TestLiveTest)
 			{
+				$test->baseUrl = $this->baseUrl;
 				$event->sender->command->p("\n    " . $testClass->name, 3);
 				$event->collection->addTest($testClass);
 			}
@@ -68,6 +71,7 @@ class TestCollectorLiveTest extends TestCollectorBehaviorAbstract
 			$event->sender->command->p("\nincluding " . $event->testPath . '...', 3);
 
 			$test = new TestLiveTest('LiveTestYaml::' . $testName);
+			$test->baseUrl = $this->baseUrl;
 			$test->liveTestConfigFile = $event->testPath;
 
 			$event->collection->addTest($test);

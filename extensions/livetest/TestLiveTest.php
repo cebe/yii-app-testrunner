@@ -12,6 +12,8 @@ class TestLiveTest extends TestAbstract
 
 	public $liveTestPath = null;
 
+	public $baseUrl = '';
+
 	/**
 	 * will be called after construct
 	 *
@@ -60,11 +62,13 @@ class TestLiveTest extends TestAbstract
 			$this->liveTestConfig = file_get_contents($this->liveTestConfigFile);
 		}
 
+		$this->prepareConfig();
+
 		$fp = fopen($tmpFile, 'w');
 		fwrite($fp, $this->liveTestConfig);
 		fclose($fp);
 
-		$command = $this->liveTestPath . ' --testsuite ' . addcslashes($tmpFile, ' !'); // todo: make shure to escape properly
+		$command = $this->liveTestPath /*. ' --feedback'*/ . ' --testsuite ' . addcslashes($tmpFile, ' !'); // todo: make shure to escape properly
 
 		$returnVar = 0;
 		passthru($command, $returnVar);
@@ -78,5 +82,15 @@ class TestLiveTest extends TestAbstract
 
 
 		unlink($tmpFile);
+	}
+
+	public function prepareConfig()
+	{
+		$this->liveTestConfig = str_replace(
+			'{$baseUrl}', $this->baseUrl,
+			$this->liveTestConfig
+		);
+
+
 	}
 }
