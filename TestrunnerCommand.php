@@ -216,6 +216,8 @@ EOF;
 
 		$this->handleBootstrap($bootstrap, $testPath);
 
+		$this->p(" - enabled TestRunner behaviors: " . print_r($this->testRunner, true) . "\n", 3);
+		$this->p(" - enabled TestCollector behaviors: " . print_r($this->testCollector, true) . "\n", 3);
 
 
 		$this->p("collecting tests...");
