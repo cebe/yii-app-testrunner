@@ -64,7 +64,7 @@ abstract class TestCollectionAbstract extends CComponent implements Iterator, Co
 
 	/**
 	 * returns all tests with that name
-	 * tests can be added multiple times to we always return an array
+	 * tests can be added multiple times so we always return an array
 	 *
 	 * @param  $name
 	 * @param boolean $includedOnly
