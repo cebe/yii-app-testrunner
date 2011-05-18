@@ -56,18 +56,62 @@ class TestCollectorPHPUnit extends TestCollectorBehaviorAbstract
 
 			$reflectionClass = new ReflectionClass($testClass);
 
-			foreach($reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-				if (substr($method->name, 0, 4) == 'test') {
+			foreach($reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC) as $method)
+			{
+				if (substr($method->name, 0, 4) == 'test')
+				{
 					$event->sender->command->p("\n    " . $method->name, 3);
-					$event->collection->addTest(
-						new TestPHPUnit(
+
+					// creates as many test classes as datasets are needed
+					$dataSets = $this->getDataSets($testClass, $method->name);
+
+					// add this test marked as skipped if no valid data is available
+					if (!is_array($dataSets) OR empty($dataSets))
+					{
+						$test = new TestPHPUnit(
 							$method->name,
 							new $testClass($method->name, array(), ''),
 							$method->name
-						)
-					);
+						);
+						$test->markSkipped('dataProvider has no valid data.');
+						$event->collection->addTest($test);
+					}
+					else
+					{
+						foreach($dataSets as $dataName => $dataSet) {
+							$event->collection->addTest(new TestPHPUnit(
+								$method->name,
+								new $testClass($method->name, $dataSet, $dataName),
+								$method->name
+							));
+						}
+					}
 				}
 			}
 		}
+	}
+
+	/**
+	 * get all data if a dataprovider is present
+	 *
+	 * @return array|boolean
+	 */
+	public function getDataSets($className, $methodName)
+	{
+		try {
+		    $dataSets = PHPUnit_Util_Test::getProvidedData($className, $methodName);
+			// no dataprovider exists
+			if (is_null($dataSets)) {
+				$dataSets = array(array());
+			} // false on error
+			elseif (!$dataSets) {
+				return false;
+			}
+		}
+		catch (Exception $e) {
+			return false;
+		}
+		
+		return $dataSets;
 	}
 }
