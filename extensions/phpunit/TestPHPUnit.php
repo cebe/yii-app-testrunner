@@ -54,6 +54,7 @@ class TestPHPUnit extends TestAbstract
 		$this->testClass = $testClass;
 		$this->reflectionClass = new ReflectionClass($testClass);
 		$this->testMethod = $this->reflectionClass->getMethod($testMethod);
+		$this->docBlock .= $this->testMethod->getDocComment();
 
 		parent::__construct($name);
 	}
