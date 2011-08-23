@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * This class contains some helpers for displaying results on console
+ *
  * @author Carsten Brandt <mail@cebe.cc>
  * @package TestRunner
  */

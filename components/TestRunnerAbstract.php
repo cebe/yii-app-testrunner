@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * abstract class for all TestRunners
+ *
  * @author Carsten Brandt <mail@cebe.cc>
  * @package TestRunner
  */
@@ -53,7 +55,7 @@ abstract class TestRunnerAbstract extends TestComponentAbstract
 	}
 
 	/**
-	 * Event that is raised after every tests ran
+	 * Event that is raised after all tests ran
 	 *
 	 * @return void
 	 */

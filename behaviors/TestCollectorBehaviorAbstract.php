@@ -1,11 +1,14 @@
 <?php
 
 /**
- * behavior for testCollector
+ * abstract behavior class for testCollector classes
  *
+ * let testCollector behaviors extend this class
+ *
+ * @author Carsten Brandt <mail@cebe.cc>
  * @package Behaviors
  */
-class TestCollectorBehaviorAbstract extends CBehavior
+abstract class TestCollectorBehaviorAbstract extends CBehavior
 {
 	/**
 	 * register eventhandlers
@@ -26,18 +29,18 @@ class TestCollectorBehaviorAbstract extends CBehavior
 	 * @param TestCollectorEvent the raised event
 	 * @return void
 	 */
-	public function beforeCollect(TestCollectorEvent  $event)
+	public function beforeCollect(TestCollectorEvent $event)
 	{
 
 	}
 
 	/**
-	 * Event that is raised before collecting tests
+	 * Event that is raised when a test was found
 	 *
 	 * @param TestCollectorEvent the raised event holding the current testcollection
 	 * @return void
 	 */
-	public function foundTest(TestCollectorEvent  $event)
+	public function foundTest(TestCollectorEvent $event)
 	{
 
 	}

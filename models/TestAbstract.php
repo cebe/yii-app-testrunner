@@ -237,7 +237,7 @@ abstract class TestAbstract extends CComponent
 	 *
 	 * message can be accessed over $event->message
 	 *
-	 * @return void
+	 * @return string
 	 */
 	public function onMarkError($message)
 	{
@@ -290,7 +290,7 @@ abstract class TestAbstract extends CComponent
 	 *
 	 * message can be accessed over $event->message
 	 *
-	 * @return void
+	 * @return string
 	 */
 	public function onMarkFailed($message)
 	{
@@ -344,7 +344,7 @@ abstract class TestAbstract extends CComponent
 	 *
 	 * message can be accessed over $event->message
 	 *
-	 * @return void
+	 * @return string
 	 */
 	public function onMarkSkipped($message)
 	{
@@ -398,7 +398,7 @@ abstract class TestAbstract extends CComponent
 	 *
 	 * message can be accessed over $event->message
 	 *
-	 * @return void
+	 * @return string
 	 */
 	public function onMarkIncomplete($message)
 	{
@@ -451,7 +451,7 @@ abstract class TestAbstract extends CComponent
 	 *
 	 * passed value (true|false) can be accessed over $event->message
 	 *
-	 * @return void
+	 * @return string
 	 */
 	public function onMarkPassed($message)
 	{

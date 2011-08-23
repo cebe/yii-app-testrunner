@@ -1,9 +1,7 @@
 <?php
 
 /**
- * The test collection represents a collection of tests
- *
- * @todo better description
+ * The default implementation of a TestCollection
  *
  * @author Carsten Brandt <mail@cebe.cc>
  * @package TestCollector

@@ -3,6 +3,8 @@
 /**
  * Events that are raised from TestRunner
  *
+ * @link http://www.yiiframework.com/doc/guide/1.1/en/basics.component#component-event
+ * 
  * @author Carsten Brandt <mail@cebe.cc>
  * @package TestRunner
  */

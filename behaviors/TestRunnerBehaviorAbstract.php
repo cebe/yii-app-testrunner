@@ -1,8 +1,11 @@
 <?php
 
 /**
- * behavior for testrunner
+ * abstract behavior class for testRunner classes
  *
+ * let testRunner behaviors extend this class
+ *
+ * @author Carsten Brandt <mail@cebe.cc>
  * @package Behaviors
  */
 abstract class TestRunnerBehaviorAbstract extends CBehavior

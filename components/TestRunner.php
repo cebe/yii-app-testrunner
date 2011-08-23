@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * Default implementation of TestRunner
+ *
  * @author Carsten Brandt <mail@cebe.cc>
  * @package TestRunner
  */

@@ -5,6 +5,8 @@
  *
  * It lists available scopes, creates scope classes etc...
  *
+ * @todo: extend TestComponentAbstract 
+ *
  * @author Carsten Brandt <mail@cebe.cc>
  * @package Scopes
  */

@@ -1,8 +1,11 @@
 <?php
 
 /**
- * behavior for testrunner
+ * behavior class for testRunner classes that generates a default console output
  *
+ * you can write your own testRunner behavior to adjust the output to your needs
+ *
+ * @author Carsten Brandt <mail@cebe.cc>
  * @package Behaviors
  */
 class TestDefaultOutputBehavior extends TestRunnerBehaviorAbstract

@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * abstract class for testRunners application components
+ *
+ * @author Carsten Brandt <mail@cebe.cc>
+ * @package Components
+ */
 class TestComponentAbstract extends CApplicationComponent
 {
 	/**
@@ -31,6 +37,5 @@ class TestComponentAbstract extends CApplicationComponent
 			}
 		}
 	}
-
 
 }

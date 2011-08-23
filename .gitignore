@@ -1,2 +1,5 @@
 # build directory
 build
+
+# ide project files
+.idea

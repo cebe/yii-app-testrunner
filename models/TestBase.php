@@ -1,12 +1,14 @@
 <?php
 
 /**
+ * Default implementation of a test class
+ *
  * @author Carsten Brandt <mail@cebe.cc>
  * @package Tests
  *
  * @property-read PHPUnit_Framework_TestResult results
  */
-class TestBase extends TestAbstract
+abstract class TestBase extends TestAbstract
 {
 
 	/**

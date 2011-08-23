@@ -1,11 +1,14 @@
 <?php
 
 /**
- * behavior for tests
+ * abstract behavior class for test class behaviors
  *
+ * let test behaviors extend this class
+ *
+ * @author Carsten Brandt <mail@cebe.cc>
  * @package Behaviors
  */
-class TestBehaviorAbstract extends CBehavior
+abstract class TestBehaviorAbstract extends CBehavior
 {
 	/**
 	 * register eventhandlers

@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * This is the default implementation of testCollector
+ *
  * @todo create abstract class
  *
  * @author Carsten Brandt <mail@cebe.cc>
