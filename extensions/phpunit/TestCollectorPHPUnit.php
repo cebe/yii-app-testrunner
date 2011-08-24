@@ -10,6 +10,16 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'TestPHPUnit.php';
  */
 class TestCollectorPHPUnit extends TestCollectorBehaviorAbstract
 {
+    /**
+     * @var array browser config for selenium test cases
+     */
+    public $seleniumBrowsers = array();
+
+    /**
+     * @var array browser baseUrl for selenium test cases
+     */
+    public $seleniumBaseUrl = null;
+
 	/**
 	 * register eventhandlers
 	 *
@@ -32,6 +42,9 @@ class TestCollectorPHPUnit extends TestCollectorBehaviorAbstract
 	public function beforeCollect(TestCollectorEvent  $event)
 	{
 		$event->sender->registerPattern('*Test.php', 'phpunit');
+        if (!empty($this->seleniumBrowsers)) {
+            PHPUnit_Extensions_SeleniumTestCase::$browsers = $this->seleniumBrowsers;
+        }
 	}
 
 	/**
@@ -79,13 +92,28 @@ class TestCollectorPHPUnit extends TestCollectorBehaviorAbstract
 					}
 					else
 					{
-						foreach($dataSets as $dataName => $dataSet) {
-							$event->collection->addTest(new TestPHPUnit(
-								$method->name,
-								new $testClass($method->name, $dataSet, $dataName),
-								$method->name
-							));
-						}
+                        // run test for each dataset and each browser if it's a selenium test
+                        $browsers = array(array());
+                        if ($testClass instanceof PHPUnit_Extensions_SeleniumTestCase) {
+                            $browsers = PHPUnit_Extensions_SeleniumTestCase::$browsers;
+                        }
+                        foreach($browsers as $browser) {
+                            foreach($dataSets as $dataName => $dataSet)
+                            {
+                                $name = $method->name;
+                                /*if (!empty($browser)) {
+                                    $name .= ' on ' . (isset($browser['name']) ? $browser['name'] : 'unnamed browser');
+                                }*/
+                                $event->collection->addTest(new TestPHPUnit(
+                                    $name,
+                                    $test = new $testClass($method->name, $dataSet, $dataName, $browser),
+                                    $method->name
+                                ));
+                                if (!empty($browser) && !is_null($this->seleniumBaseUrl)) {
+                                    $test->setBrowserUrl($this->seleniumBaseUrl);
+                                }
+                            }
+                        }
 					}
 				}
 			}

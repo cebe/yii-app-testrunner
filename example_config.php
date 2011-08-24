@@ -60,6 +60,23 @@ return array(
                 'behaviors' => array(
                     'phpunit' => array(
                         'class' => 'testRunner.extensions.phpunit.TestCollectorPHPUnit',
+                        'seleniumBaseUrl' => 'http://localhost/',
+                        'seleniumBrowsers' => array(
+                            array(
+                                'name'    => 'Firefox',
+                                'browser' => '*firefox',
+                                'host'    => 'localhost',
+                                'port'    => 4444,
+                                'timeout' => 30000,
+                            ),
+                            array(
+                                'name'    => 'Safari',
+                                'browser' => '*safari',
+                                'host'    => 'localhost',
+                                'port'    => 4444,
+                                'timeout' => 30000,
+                            ),
+                        ),
                     ),
                 ),
             ),
