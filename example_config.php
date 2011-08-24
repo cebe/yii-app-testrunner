@@ -24,7 +24,7 @@ return array(
 				 */
 				'class' => 'TestRunner',
 				/*
-				 * attach behaviors to testRunner class
+				 * attach behaviors(extensions) to testRunner class
 				 */
 				'behaviors'=>array(
 					'junit' => array(

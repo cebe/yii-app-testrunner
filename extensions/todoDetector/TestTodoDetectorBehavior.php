@@ -3,7 +3,8 @@
 /**
  * behavior for testrunner
  *
- * @package Behaviors
+ * @author Carsten Brandt <mail@cebe.cc>
+ * @package extensions.todoDetector
  */
 class TestTodoDetectorBehavior extends TestRunnerBehaviorAbstract
 {

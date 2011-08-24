@@ -3,7 +3,8 @@
 /**
  * dependency behavior for tests
  *
- * @package Behaviors
+ * @author Carsten Brandt <mail@cebe.cc>
+ * @package extensions.testDependencies
  */
 class TestDependencyTestBehavior extends TestBehaviorAbstract
 {

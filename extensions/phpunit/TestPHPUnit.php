@@ -2,7 +2,7 @@
 
 /**
  * @author Carsten Brandt <mail@cebe.cc>
- * @package Tests
+ * @package extensions.phpunit
  */
 class TestPHPUnit extends TestAbstract
 {
@@ -31,7 +31,7 @@ class TestPHPUnit extends TestAbstract
 
 	/**
 	 *
-	 * @return void
+	 * @return PHPUnit_Framework_TestResult
 	 */
 	public function getResults()
 	{

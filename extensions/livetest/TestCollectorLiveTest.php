@@ -5,10 +5,14 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'TestLiveTest.php';
 /**
  * behavior for testCollector
  *
- * @package Behaviors
+ * @author Carsten Brandt <mail@cebe.cc>
+ * @package extensions.livetest
  */
 class TestCollectorLiveTest extends TestCollectorBehaviorAbstract
 {
+    /**
+     * @var string configurable baseUrl for all collected liveTest tests
+     */
 	public $baseUrl = '';
 
 	/**

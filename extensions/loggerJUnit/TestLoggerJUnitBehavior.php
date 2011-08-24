@@ -5,7 +5,8 @@
  *
  * @todo extend to support LiveTest and others
  *
- * @package Behaviors
+ * @author Carsten Brandt <mail@cebe.cc>
+ * @package extensions.loggerJUnit
  */
 class TestLoggerJUnitBehavior extends TestRunnerBehaviorAbstract
 {

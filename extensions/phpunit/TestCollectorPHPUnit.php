@@ -3,9 +3,10 @@
 require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'TestPHPUnit.php';
 
 /**
- * behavior for testCollector
+ * testCollector behavior that collects phpunit tests
  *
- * @package Behaviors
+ * @author Carsten Brandt <mail@cebe.cc>
+ * @package extensions.phpunit
  */
 class TestCollectorPHPUnit extends TestCollectorBehaviorAbstract
 {

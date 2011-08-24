@@ -3,9 +3,10 @@
 /**
  * behavoir that handles test dependencies
  *
- * run tests in
+ * tests are re-ordered by their dependencies
  *
- * @package Behaviors
+ * @author Carsten Brandt <mail@cebe.cc>
+ * @package extensions.codeCoverage
  */
 class TestCodeCoverageBehavior extends TestRunnerBehaviorAbstract
 {

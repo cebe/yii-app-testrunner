@@ -3,13 +3,14 @@
 require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'TestDependencyTestBehavior.php';
 
 /**
- * behavoir that handles test dependencies
+ * behavior that handles test dependencies
  *
- * run tests in
+ * tests are re-ordered by their dependencies
  *
  * @todo make this work for tests like LiveTest
  *
- * @package Behaviors
+ * @author Carsten Brandt <mail@cebe.cc>
+ * @package extensions.testDependencies
  */
 class TestDependencyBehavior extends TestRunnerBehaviorAbstract
 {

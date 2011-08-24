@@ -2,14 +2,25 @@
 
 /**
  * @author Carsten Brandt <mail@cebe.cc>
- * @package Tests
+ * @package extensions.livetest
  */
 class TestLiveTest extends TestAbstract
 {
+    /**
+     * @var string the livetest config to use for this test
+     */
 	public $liveTestConfig = null;
 
+    /**
+     * @var string filename of the livetest config-file to use for this test
+     * $liveTestConfig must be null if this is set
+     */
 	public $liveTestConfigFile = null;
 
+    /**
+     * @var string filename of the livetest config-file to use for this test
+     * $liveTestConfig must be null if this is set
+     */
 	public $liveTestPath = null;
 
 	public $baseUrl = '';
@@ -22,6 +33,7 @@ class TestLiveTest extends TestAbstract
 	public function init()
 	{
 		if (is_null($this->liveTestPath)) {
+            // @todo: fix this to work on every system
 			$this->liveTestPath =
 				dirname(dirname(dirname(__FILE__))) .
 				DIRECTORY_SEPARATOR . 'vendors' .
