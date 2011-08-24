@@ -30,6 +30,12 @@ class TestrunnerCommand extends CConsoleCommand
 	 */
 	public $testRunner = array(
 		'class' => 'TestRunner',
+        'behaviors'=>array(
+            'TestDefaultOutputBehavior',
+            'dependencies' => array(
+                'class' => 'testRunner.extensions.testDependencies.TestDependencyBehavior',
+            ),
+        ),
 	);
 
 	/**
@@ -39,16 +45,13 @@ class TestrunnerCommand extends CConsoleCommand
 	 */
 	public $testCollector = array(
 		'class' => 'TestCollector',
-	);
+        'behaviors'=>array(
+            'phpunit' => array(
+                'class' => 'testRunner.extensions.phpunit.TestCollectorPHPUnit',
+            ),
 
-	/**
-	 * Base Yii-alias for testRunnerCommand
-	 *
-	 * set this to the directory where you added the command to your application
-	 *
-	 * @var string
-	 */
-	public $baseAlias = 'application.commands.testRunner';
+        ),
+	);
 
 	/**
 	 * initialize Command, scopemanager and include aliases
@@ -57,16 +60,23 @@ class TestrunnerCommand extends CConsoleCommand
 	 */
 	public function init()
 	{
-		Yii::import($this->baseAlias . '.vendors.phpunit.*');
-		Yii::import($this->baseAlias . '.behaviors.*');
-		Yii::import($this->baseAlias . '.components.*');
-		Yii::import($this->baseAlias . '.models.*');
-		Yii::import($this->baseAlias . '.scopes.*');
-		Yii::import($this->baseAlias . '.*');
+        Yii::setPathOfAlias('testRunner', dirname(__FILE__));
+        Yii::import('testRunner.vendors.phpunit.*');
+        Yii::import('testRunner.vendors.phpunit-selenium.*');
+        Yii::import('testRunner.vendors.php-code-coverage.*');
+        Yii::import('testRunner.vendors.php-file-iterator.*');
+        Yii::import('testRunner.vendors.php-text-template.*');
+        Yii::import('testRunner.vendors.php-token-stream.*');
+        Yii::import('testRunner.vendors.php-timer.*');
+		Yii::import('testRunner.behaviors.*');
+		Yii::import('testRunner.components.*');
+		Yii::import('testRunner.models.*');
+		Yii::import('testRunner.scopes.*');
+		Yii::import('testRunner.*');
 
 		ScopeManager::setInstance(
 			array(
-				'scopePath' => array($this->baseAlias . '.scopes'),
+				'scopePath' => array('testRunner.scopes'),
 			),
 			$this
 		);
@@ -202,7 +212,7 @@ EOF;
 		$this->p(" - enabled TestCollector behaviors: " . print_r($this->testCollector, true) . "\n", 3);
 
 
-		$this->p("collecting tests...");
+        $this->p("collecting tests...");
 
 		$testCollector = $this->getTestCollector();
 		$testCollector->setBasePath($testPath);

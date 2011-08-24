@@ -7,3 +7,18 @@
 [submodule "vendors/livetest"]
 	path = vendors/livetest
 	url = https://github.com/phphatesme/LiveTest.git
+[submodule "vendors/php-file-iterator"]
+	path = vendors/php-file-iterator
+	url = https://github.com/sebastianbergmann/php-file-iterator.git
+[submodule "vendors/phpunit-selenium"]
+	path = vendors/phpunit-selenium
+	url = https://github.com/sebastianbergmann/phpunit-selenium.git
+[submodule "vendors/php-text-template"]
+	path = vendors/php-text-template
+	url = https://github.com/sebastianbergmann/php-text-template.git
+[submodule "vendors/php-token-stream"]
+	path = vendors/php-token-stream
+	url = https://github.com/sebastianbergmann/php-token-stream.git
+[submodule "vendors/php-timer"]
+	path = vendors/php-timer
+	url = https://github.com/sebastianbergmann/php-timer.git
