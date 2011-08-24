@@ -4,4 +4,8 @@ Yii App TestRunner is a [yii-framework](http://www.yiiframework.com/) based comm
 It can run [phpunit](https://github.com/sebastianbergmann/phpunit/), [LiveTest](https://github.com/phphatesme/LiveTest) and selenium tests.
 Currently thinking about including [atoum](https://github.com/mageekguy/atoum).
 
+## Requirements
+
+- PHPUnit 3.5.13
+- PHP 5.3
 

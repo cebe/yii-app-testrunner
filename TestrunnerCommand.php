@@ -73,56 +73,38 @@ class TestrunnerCommand extends CConsoleCommand
 	}
 
 	/**
-	 *
 	 * @return TestCollector
 	 */
 	public function getTestCollector()
 	{
-		$config = $this->testCollector;
-
-		if (isset($config['class'])) {
-			$class = $config['class'];
-			unset($config['class']);
-		} else {
-			$class = 'TestCollector';
-		}
-
-		if (($pos = strripos($class, '.')) !== false) {
-			Yii::import($class);
-			$class = substr($class, $pos + 1);
-		}
-		$runner = new $class($this);
-		$runner->configure($config);
-		$runner->init();
-
-		return $runner;
+        return $this->getComponent('TestCollector', $this->testCollector);
 	}
 
 	/**
-	 *
 	 * @return TestRunner
 	 */
 	public function getTestRunner()
 	{
-		$config = $this->testRunner;
-
-		if (isset($config['class'])) {
-			$class = $config['class'];
-			unset($config['class']);
-		} else {
-			$class = 'TestRunner';
-		}
-
-		if (($pos = strripos($class, '.')) !== false) {
-			Yii::import($class);
-			$class = substr($class, $pos + 1);
-		}
-		$runner = new $class($this);
-		$runner->configure($config);
-		$runner->init();
-
-		return $runner;
+		return $this->getComponent('TestRunner', $this->testRunner);
 	}
+
+    protected function getComponent($class, $config)
+    {
+        if (isset($config['class'])) {
+            $class = $config['class'];
+            unset($config['class']);
+        }
+
+        if (($pos = strripos($class, '.')) !== false) {
+            Yii::import($class);
+            $class = substr($class, $pos + 1);
+        }
+        $component = new $class($this);
+        $component->configure($config);
+        $component->init();
+
+        return $component;
+    }
 
 	/**
 	 * returns help string for command
@@ -146,7 +128,7 @@ HELP
 
 	listScopes  list of available scopes for --scope
 
-	runTests    run tests
+	run    run tests
 
 		--path          set TestCollector.basePath
 						default is the path defined in config/main.php
@@ -196,7 +178,7 @@ EOF;
 	 *
 	 * @return void
 	 */
-	public function actionRunTests($path='', $bootstrap='', $scope='all', $verbose=1, $quiet=false, $coverage=false)
+	public function actionRun($path='', $bootstrap='', $scope='all', $verbose=1, $quiet=false, $coverage=false)
 	{
 		$this->handleVerbosity($verbose, $quiet);
 
