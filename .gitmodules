@@ -22,3 +22,6 @@
 [submodule "vendors/php-timer"]
 	path = vendors/php-timer
 	url = https://github.com/sebastianbergmann/php-timer.git
+[submodule "vendors/phpunit-dbunit"]
+	path = vendors/phpunit-dbunit
+	url = https://github.com/sebastianbergmann/dbunit.git
